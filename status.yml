@@ -1,0 +1,15 @@
+common: &common
+  title: Status board
+  
+
+development: &non_production_settings
+  <<: *common
+  host: http://localhost:4567
+
+test:
+  <<: *non_production_settings
+  <<: *common  
+  
+production:
+  <<: *common
+  host: http://localhost:4567
