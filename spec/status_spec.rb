@@ -2,7 +2,7 @@ require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe 'status' do
   before(:each) do
-    @status = Status.new(:updated_at => Time.now, :value => true)
+    @status = Status.new(:updated_at => Time.now, :value => true, :uri => 'http://example.com/status')
   end
 
   it 'should be valid' do
@@ -13,6 +13,12 @@ describe 'status' do
     @status = Status.new
     @status.should_not be_valid
     @status.errors[:updated_at].should include("Timestamp must not be blank")
+  end
+  
+  it 'should require uri' do
+    @status = Status.new
+    @status.should_not be_valid
+    @status.errors[:uri].should include("Uri must not be blank")
   end
   
   it 'should require value' do

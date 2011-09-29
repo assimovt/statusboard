@@ -8,5 +8,17 @@ class Node
     
     raise ArgumentError, "URI is invalid" unless @host
   end
+
+
+  def update
+    begin
+      response = RestClient.get uri
+      status = response.code == 200
+    rescue => ex
+      status = false
+    end
+    result = Status.create(:updated_at => Time.now, :value => status, :uri => uri)
+    result.saved?
+  end
   
 end
