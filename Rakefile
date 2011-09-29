@@ -27,6 +27,13 @@ namespace :db do
   end
 end
 
+namespace :status do
+  desc 'Update status for the nodes'
+  task :update => :environment do
+    APP_CONFIG["nodes"].each { |uri| Node.new(uri).update }
+  end
+end
+
 task :environment do
   require File.join(File.dirname(__FILE__), 'environment')
 end
