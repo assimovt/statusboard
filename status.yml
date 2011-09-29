@@ -5,6 +5,10 @@ common: &common
 development: &non_production_settings
   <<: *common
   host: http://localhost:4567
+  # Supports http or https
+  nodes:
+    - http://host1.example.com/status
+    - http://host1.example.com/status
 
 test:
   <<: *non_production_settings

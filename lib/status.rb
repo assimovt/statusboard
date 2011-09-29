@@ -7,4 +7,5 @@ class Status
 
   validates_presence_of :value, :message => 'Value must not be blank'
   validates_presence_of :updated_at, :message => 'Timestamp must not be blank'
+  
 end

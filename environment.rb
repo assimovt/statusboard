@@ -7,6 +7,7 @@ require 'dm-aggregates'
 require 'dm-migrations'
 require 'haml'
 require 'ostruct'
+require 'rest_client'
 
 require 'sinatra' unless defined?(Sinatra)
 
