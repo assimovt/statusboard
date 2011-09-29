@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 require 'sinatra'
-require File.join(File.dirname(__FILE__), 'environment')
+require File.join(File.dirname(__FILE__), 'config', 'environment')
 
 configure do
   set :views, "#{File.dirname(__FILE__)}/views"
