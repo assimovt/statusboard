@@ -4,3 +4,5 @@
 log/*
 *.swp
 *.swo
+*.komodoproject
+.sass-cache/
