@@ -5,7 +5,7 @@ require 'sinatra'
 require 'sass'
 require 'haml'
 
-require File.join(File.dirname(__FILE__), 'environment')
+require File.join(File.dirname(__FILE__), 'config', 'environment')
 
 # set sinatra's variables
 set :app_file, __FILE__
