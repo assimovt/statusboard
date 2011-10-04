@@ -12,6 +12,7 @@ gem 'dm-migrations'
 gem 'haml'
 gem 'rest-client'
 gem 'webmock'
+gem 'compass'
 
 group :test do
   gem 'rspec', :require => 'spec'
