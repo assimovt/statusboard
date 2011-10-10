@@ -26,7 +26,9 @@ describe 'main application' do
   end
 
   it 'should have more specs' do
-    pending
+    get '/uptime', :node => 'http://example.com/status', :start_time => 0, :end_time => Time.now.to_i
+    last_response.should be_ok
+    last_response.body.should == "100.00"
   end
   
   

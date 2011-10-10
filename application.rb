@@ -43,3 +43,11 @@ get '/statuses.json' do
   content_type :json
   Status.current.to_json
 end
+
+get '/uptime' do
+  @start_time = Time.at(params[:start_time].to_i) rescue 0
+  @end_time   = Time.at(params[:end_time].to_i)   rescue 0
+  @node       = Node.new(params[:node])
+  
+  Status.uptime(@start_time, @end_time, @node)
+end
