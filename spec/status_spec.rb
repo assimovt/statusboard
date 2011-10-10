@@ -1,7 +1,8 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe 'status' do
-  before(:each) do
+  
+  before do
     @status = Status.new(:updated_at => Time.now, :value => true, :uri => 'http://example.com/status')
     @node = Node.new('http://example.com/status')
     Node.stub!(:all).and_return(['http://example.com/status'])
@@ -57,6 +58,17 @@ describe 'status' do
     statuses[@node.uri][:uri].should eql(@node.uri)
     statuses[@node.uri][:status].should be_true
     (statuses[@node.uri][:timestamp].strftime("%s").to_i + 600 > Time.now.to_i).should be_true
+  end
+  
+  it 'should calculate uptime' do
+    6.times { Status.create(:updated_at => Time.now, :value => true,  :uri => 'http://test.uptime/status') }
+    1.times { Status.create(:updated_at => Time.now, :value => false, :uri => 'http://test.uptime/status') }
+    node = Node.new('http://test.uptime/status')
+    Status.uptime(Time.now, Time.now, node).should == "85.71"
+  end
+  
+  it 'should return nil for uptime if no statuses' do
+    Status.uptime(Time.now, Time.now, @node).should be_nil
   end
   
   

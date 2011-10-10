@@ -12,5 +12,5 @@ class Node
     
     raise ArgumentError, "URI is invalid" unless @host
   end
-
+  
 end
