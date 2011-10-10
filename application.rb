@@ -39,7 +39,7 @@ get '/' do
   haml :root
 end
 
-get '/nodes.json' do
+get '/statuses.json' do
   content_type :json
   Status.current.to_json
 end

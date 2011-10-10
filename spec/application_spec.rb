@@ -17,8 +17,8 @@ describe 'main application' do
     last_response.should be_ok
   end
   
-  it 'should get node statuses as json' do
-    get '/nodes.json'
+  it 'should get nodes statuses as json' do
+    get '/statuses.json'
     last_response.should be_ok
     json = JSON.parse(last_response.body)
     json['http://example.com/status'].should_not be_nil
