@@ -1,4 +1,40 @@
-%h2 Main Page
-%p Here is some text.
-%p Here is a <a href='/'>link</a>.
-%p ttys!
+#wrapper
+  #overview.block
+    .header
+      #last-updated
+        Last updated:
+        %span.datetime 12 Oct, 2011 14:00 GMT
+      %ul#filter-options
+        %li.active
+          %a(href="#") Last 24h
+        %li
+          %a(href="#") Last month
+        %li
+          %a(href="#") Custom period
+    .body
+      #service-status
+        .name
+          %h1 Service name
+        .statuses
+          %dl
+            %dt Up
+            %dd.status.up 2
+          %dl
+            %dt Down
+            %dd.status.down 1
+  #nodes.block
+    .header
+      %span.name NODES
+      %span.node-status STATUS
+    .body
+      #nodes-status
+        .node
+          %span.name
+            saeappc.nokia.com
+          %span.node-status
+            %span.status.up
+        .node
+          %span.name
+            saeappc.nokia.com
+          %span.node-status
+            %span.status.down
