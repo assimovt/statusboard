@@ -5,6 +5,8 @@ require 'rspec/core/rake_task'
 task :default => :test
 task :test => :spec
 
+Dir["tasks/*.rake"].sort.each { |ext| load ext }
+
 if !defined?(RSpec)
   puts "spec targets require RSpec"
 else
