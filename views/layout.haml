@@ -3,7 +3,11 @@
   %meta{ :charset => "utf-8" }/
   %meta{'http-equiv'=>"Content-Language", :content=>"en-us"}/
   %title= @title || APP_CONFIG['title']
-  %link{:href=>"/stylesheets/screen.css", :media=>"screen", :rel=>"stylesheet", :type=>"text/css"}/
+  %link{:href=>"/stylesheets/screen.css", :media=>"screen", :rel=>"stylesheet", :type=>"text/css"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-1.6.4.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-qtip.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/modernizr.custom.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/application.js"}
 %body
   .container.showgrid
     #header
