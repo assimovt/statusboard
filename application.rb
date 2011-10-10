@@ -21,3 +21,8 @@ end
 get '/' do
   haml :root
 end
+
+get '/nodes.json' do
+  content_type :json
+  Status.current.to_json
+end

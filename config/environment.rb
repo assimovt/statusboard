@@ -8,6 +8,7 @@ require 'dm-migrations'
 require 'haml'
 require 'ostruct'
 require 'rest_client'
+require 'json'
 
 require 'sinatra' unless defined?(Sinatra)
 

@@ -30,7 +30,7 @@ end
 namespace :status do
   desc 'Update status for the nodes'
   task :update => :environment do
-    APP_CONFIG["nodes"].each { |uri| Node.new(uri).update }
+    Node.all.each { |uri| Node.new(uri).update }
   end
 end
 

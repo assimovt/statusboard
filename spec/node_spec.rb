@@ -14,24 +14,8 @@ describe 'node' do
     lambda { Node.new('invalid').should }.should raise_error(ArgumentError)
   end
   
-  it 'should set value to true when node is up' do
-    stub_request(:get, /.*example.com.*/).to_return(:body => 'OK', :status => 200)
-    @node.update.should be_true
-    status = Status.first(:uri => 'http://example.com/status')
-    status.should be_true
-    status.value.should be_true
-    # max 10 min for tests to pass
-    (status.updated_at.strftime("%s").to_i + 600 > Time.now.to_i).should be_true
-  end
-  
-  it 'should set value to false when node is down' do
-    stub_request(:get, /.*example.com.*/).to_return(:body => 'NOT', :status => 422)
-    @node.update.should be_true
-    status = Status.first(:uri => 'http://example.com/status')
-    status.should be_true
-    status.value.should be_false
-    # max 10 min for tests to pass
-    (status.updated_at.strftime("%s").to_i + 600 > Time.now.to_i).should be_true
+  it 'should list all nodes' do
+    Node.all.should eql(['http://host1.example.com/status', 'http://host2.example.com/status'])
   end
 
 end
