@@ -21,8 +21,8 @@ describe 'main application' do
     get '/statuses.json'
     last_response.should be_ok
     json = JSON.parse(last_response.body)
-    json['http://example.com/status'].should_not be_nil
-    json['http://example.com/status']['status'].should be_true
+    json.first.should_not be_nil
+    json.first['status'].should be_true
   end
 
   it 'should have more specs' do

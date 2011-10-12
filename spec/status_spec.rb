@@ -54,10 +54,11 @@ describe 'status' do
     stub_request(:get, /.*example.com.*/).to_return(:body => 'OK', :status => 200)
     Status.update(@node)
     statuses = Status.current
-    statuses.has_key?(@node.uri).should be_true
-    statuses[@node.uri][:uri].should eql(@node.uri)
-    statuses[@node.uri][:status].should be_true
-    (statuses[@node.uri][:timestamp].strftime("%s").to_i + 600 > Time.now.to_i).should be_true
+    statuses.first.should be_true
+    statuses.first[:uri].should eql(@node.uri)
+    statuses.first[:status].should be_true
+    statuses.first[:host].should eql('example.com')
+    (statuses.first[:timestamp].strftime("%s").to_i + 600 > Time.now.to_i).should be_true
   end
   
   it 'should calculate uptime' do

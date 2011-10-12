@@ -29,13 +29,14 @@ class Status
   
   # Public: Get the current status of all nodes
   #
-  # Returns hash of statuses for every node with data
+  # Returns Array of statuses for every node with data
   def self.current
-    statuses = {}
+    statuses = Array.new
     Node.all.each do |uri|
+      n = Node.new(uri)
       s = self.first(:uri => uri, :order => [ :updated_at.desc ], :limit => 1)
       next unless s
-      statuses[s.uri] = { :timestamp => s.updated_at, :status => s.value, :uri => s.uri }
+      statuses << { :timestamp => s.updated_at, :status => s.value, :uri => n.uri, :host => n.host }
     end
     statuses
   end
