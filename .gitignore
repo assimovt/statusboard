@@ -6,3 +6,4 @@ log/*
 *.swo
 *.komodoproject
 .sass-cache/
+config/status.yml
