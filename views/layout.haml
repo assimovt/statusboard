@@ -1,17 +1,19 @@
-!!!
-!!! XML
-!!! Strict
-%html{ :xmlns => "http://www.w3.org/1999/xhtml", :lang => "en", 'xml:lang' => "en" }
-  %head
-    %title= @title || APP_CONFIG['title']
-    %meta{'http-equiv'=>"Content-Type", :content=>"text/html; charset=iso-8859-1"}/
-    %meta{'http-equiv'=>"Content-Language", :content=>"en-us"}/
-    %link{:href=>"/stylesheets/screen.css", :media=>"screen", :rel=>"stylesheet", :type=>"text/css"}/
-  %body
-    .container.showgrid
-      .header
-        %h1#logo
-          %a{:href => '/'}= APP_CONFIG['title']
-      .body= yield
-      .footer
-        %p#legal= "&mdash; &copy; #{Time.now.strftime('%Y')}"
+!!! 5
+%head
+  %meta{ :charset => "utf-8" }/
+  %meta{'http-equiv'=>"Content-Language", :content=>"en-us"}/
+  %title= @title || APP_CONFIG['title']
+  %link{:href=>"/stylesheets/screen.css", :media=>"screen", :rel=>"stylesheet", :type=>"text/css"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-1.6.4.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-qtip.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/modernizr.custom.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/mustache.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/application.js"}
+%body
+  .container.showgrid
+    #header
+      %h1#logo
+        %a{:href => '/'}= APP_CONFIG['title']
+    #body= yield
+    #footer
+      %p#legal= "&mdash; &copy; #{Time.now.strftime('%Y')}"

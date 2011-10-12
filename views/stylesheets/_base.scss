@@ -1,8 +1,35 @@
-$blueprint_grid_columns: 24;
+$blueprint_grid_columns: 20;
 $blueprint_grid_width: 30px;
 $blueprint_grid_margin: 10px;
 $font_color: #333;
 
-@import "compass/reset";
+$base-font-size: 16px;
+$base-line-height: 24px;
+$default-border-radius: 5px;
+
+/* Variables */
+
+$wrapper-color: #EBEBEB;
+$base-font-color: #333333;
+$base-shade-color: #333333;
+$accent-color: #777;
+$white-color: #FFF;
+$light-gray-color: #CCC;
+$label-color: #666;
+$up-color: #4B9900;
+$down-color: #F76161;
+$uptime-color: #3399CC;
+
+/* Import Blueprint modules */
+
+//@import "compass/reset";
 @import "compass/utilities";
-@import "blueprint";
+@import "compass/css3";
+@import "compass/typography/vertical_rhythm";
+@import "blueprint/reset";
+@import "blueprint/typography";
+@import "blueprint/utilities";
+@import "blueprint/grid";
+@import "blueprint/interaction";
+@import "blueprint/form";
+

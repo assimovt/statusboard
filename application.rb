@@ -11,12 +11,8 @@ require File.join(File.dirname(__FILE__), 'config', 'environment')
 set :app_file, __FILE__
 set :root, File.dirname(__FILE__)
 set :views, "views"
-set :public, 'public'
-
-configure do
-  Compass.add_project_configuration(File.join(Sinatra::Application.root, 'config', 'compass.config'))
-  set :views, "#{File.dirname(__FILE__)}/views"
-end
+set :public_folder, "public"
+set :haml, {:format => :html5} # default Haml format is :xhtml
 
 # at a minimum, the main scss file must reside within the ./views directory. here, we create a ./views/stylesheets directory where all of the sass files can safely reside.
 get '/stylesheets/:name.css' do
