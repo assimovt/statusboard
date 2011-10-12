@@ -1,15 +1,15 @@
 StatusBoard = (function($) {
   var refreshRate = 2000,
-      serviceStatusEl = '#service-status',
+      serviceStatusContainer = '#service-status',
       lastUpdateEl = '#last-updated',
+      nodesContainer = '#nodes',
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
       uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{uptime}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
       timer = '';
   
   var updateTime = function() {
     var currentTime = new Date();
-    $('.datetime').html(currentTime.getDate() + "." + (currentTime.getMonth()+1) + "."+ currentTime.getFullYear() + " " + currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds());
-    
+    $('.datetime').html(currentTime.getDate() + "." + (currentTime.getMonth()+1) + "."+ currentTime.getFullYear() + " " + currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds());  
   };
   
   var startInt = function(func) {
@@ -44,10 +44,11 @@ StatusBoard = (function($) {
   };
   
   var showStatus = function() {
-    var output = "", statuses = { up:0, down:0};
+    var output = "", statuses = {up:0, down:0};
+    // FIXME: Use path to get JSON
     var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":false, "uri":"server 3"}, {"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
 
-    $(serviceStatusEl).slideDown();
+    $(serviceStatusContainer).slideDown();
     $(lastUpdateEl).fadeIn();
     //$.getJSON(url+query,function(json){});
     
@@ -61,7 +62,7 @@ StatusBoard = (function($) {
     });
 
     updateStatuses(statuses);
-    $("#nodes").html(output);
+    $(nodesContainer).html(output);
     updateTime();
   };
   
@@ -69,19 +70,20 @@ StatusBoard = (function($) {
     var output = "";
         
     stopInt();
-    $(serviceStatusEl).slideUp();
+    $(serviceStatusContainer).slideUp();
     $(lastUpdateEl).fadeOut();
+    // FIXME: Use path to get JSON 
     var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
     
     //startTime = (startTime.length > 0) ? "" : "";
     //endTime = (endTime.length > 0) ? "" : "";
     
     $.each(obj, function(i, node) {
-      // Request node uptime
+      // FIXME: Request node uptime
       output += Mustache.to_html(uptimeTmpl, {uri: node.uri, uptime: 3});
     });
     
-    $("#nodes").html(output);
+    $(nodesContainer).html(output);
   };
   
   var showStats = function() {
@@ -119,7 +121,8 @@ StatusBoard = (function($) {
     if($('#filter-options li').hasClass('active')){
       startInt(showStatus);
     }
-  }
+  };
+  
   return {
     showStats: showStats
   };
