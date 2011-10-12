@@ -1,5 +1,5 @@
 StatusBoard = (function($) {
-  var refreshRate = 1000,
+  var refreshRate = 2000,
       serviceStatusEl = '#service-status',
       lastUpdateEl = '#last-updated',
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
@@ -14,8 +14,7 @@ StatusBoard = (function($) {
   
   var startInt = function(func) {
     if(timer === "") {
-      console.log("Interval started for " + showStatus.typeof);
-      timer = window.setInterval(func.apply, refreshRate);
+      timer = window.setInterval(func, refreshRate);
     }else{
       stopInt();
     }
@@ -25,7 +24,6 @@ StatusBoard = (function($) {
     if(timer !== "") {
       window.clearInterval(timer);
       timer = "";
-      console.log("Interval stopped");
     }
   };
   
@@ -48,6 +46,7 @@ StatusBoard = (function($) {
   var showStatus = function() {
     var output = "", statuses = { up:0, down:0};
     var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":false, "uri":"server 3"}, {"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
+
     $(serviceStatusEl).slideDown();
     $(lastUpdateEl).fadeIn();
     //$.getJSON(url+query,function(json){});
@@ -68,6 +67,8 @@ StatusBoard = (function($) {
   
   var showUptime = function(startTime, endTime) {
     var output = "";
+        
+    stopInt();
     $(serviceStatusEl).slideUp();
     $(lastUpdateEl).fadeOut();
     var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
@@ -109,14 +110,14 @@ StatusBoard = (function($) {
         break;
         
         default:
-          showStatus();
+          startInt(showStatus);
       }
       
       return false;
     });
     
     if($('#filter-options li').hasClass('active')){
-      showStatus();
+      startInt(showStatus);
     }
   }
   return {
