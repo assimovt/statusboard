@@ -1,0 +1,336 @@
+/* Variables */
+/* Import Blueprint modules */
+html {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.bp-reset-element, body, h1, h2, h3, h4, h5, h6, article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary, blockquote, q, th, td, caption, table,
+div, span, object, iframe, p,
+pre, a, abbr, acronym, address,
+code, del, dfn, em, img,
+dl, dt, dd, ol, ul, li, fieldset,
+form, label, legend,
+caption, tbody, tfoot, thead, tr {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-weight: inherit;
+  font-style: inherit;
+  font-size: 100%;
+  font-family: inherit;
+  vertical-align: baseline;
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section, summary {
+  display: block;
+}
+
+blockquote, q {
+  quotes: "" "";
+}
+blockquote:before, blockquote:after, q:before, q:after {
+  content: "";
+}
+
+th, td, caption {
+  float: none !important;
+  text-align: left;
+  font-weight: normal;
+  vertical-align: middle;
+}
+
+table {
+  border-collapse: separate;
+  border-spacing: 0;
+  vertical-align: middle;
+}
+
+a img {
+  border: none;
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0em;
+  margin-bottom: .25em;
+  font-weight: bold;
+}
+
+h1 {
+  font-size: 2.2em;
+}
+
+h2 {
+  font-size: 1.6em;
+}
+
+h3 {
+  font-size: 1.4em;
+}
+
+h4 {
+  font-size: 1.3em;
+}
+
+h5 {
+  font-size: 1.2em;
+}
+
+h6 {
+  font-size: 1.1em;
+}
+
+p {
+  margin-bottom: 1em;
+  line-height: 1.3;
+}
+
+a {
+  color: #095EAE;
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+
+/* Helper styles */
+.left {
+  float: left;
+}
+
+.right {
+  float: right;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Layout */
+body {
+  background: #FFF;
+  color: #1B1B1B;
+  font-family: Helvetica, Arial, Helvetica, sans-serif;
+}
+
+.container {
+  display: inline;
+  float: left;
+  margin-right: 0;
+  width: 710px;
+  float: none;
+  display: block;
+  margin: 0 auto;
+}
+* html .container {
+  overflow-x: hidden;
+}
+
+#wrapper {
+  background: #ebebeb;
+  overflow: hidden;
+  margin-bottom: 1.5em;
+  margin-top: 1.5em;
+}
+
+#header {
+  margin-top: 1.5em;
+  overlow: hidden;
+}
+#header h1 {
+  font-size: 1.563em;
+  line-height: 1.92em;
+}
+
+#footer {
+  padding: 0;
+  margin: 0;
+  font-size: 0.688em;
+  line-height: 2.182em;
+  text-align: center;
+}
+
+#logo a:hover {
+  text-decoration: none;
+}
+
+.block {
+  background: #333333;
+  overflow: hidden;
+  color: white;
+  margin: 20px;
+  border-bottom: 2px solid #2b2b2b;
+}
+.block .header {
+  background: #262626;
+  color: #666666;
+  padding: 5px 15px;
+  overflow: hidden;
+  font-size: 0.688em;
+  line-height: 2.182em;
+  text-align: left;
+  text-transform: uppercase;
+}
+.block .body {
+  margin: 0 2px;
+}
+
+.status {
+  background: #777777;
+  text-align: right;
+  padding: 5px;
+  border: 2px solid #777777;
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  text-shadow: rgba(0, 0, 0, 0.4) -1px -1px 0;
+}
+.status.up {
+  background: #4b9900;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b9900), color-stop(100%, #326600));
+  background: -webkit-linear-gradient(#4b9900, #326600);
+  background: -moz-linear-gradient(#4b9900, #326600);
+  background: -o-linear-gradient(#4b9900, #326600);
+  background: -ms-linear-gradient(#4b9900, #326600);
+  background: linear-gradient(#4b9900, #326600);
+}
+.status.down {
+  background: #f76161;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f76161), color-stop(100%, #f53030));
+  background: -webkit-linear-gradient(#f76161, #f53030);
+  background: -moz-linear-gradient(#f76161, #f53030);
+  background: -o-linear-gradient(#f76161, #f53030);
+  background: -ms-linear-gradient(#f76161, #f53030);
+  background: linear-gradient(#f76161, #f53030);
+}
+
+#service-status {
+  overflow: hidden;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #404040), color-stop(100%, #333333));
+  background: -webkit-linear-gradient(#404040, #333333);
+  background: -moz-linear-gradient(#404040, #333333);
+  background: -o-linear-gradient(#404040, #333333);
+  background: -ms-linear-gradient(#404040, #333333);
+  background: linear-gradient(#404040, #333333);
+}
+#service-status .name {
+  float: left;
+}
+#service-status .name h1 {
+  margin-top: 1.2em;
+  margin-bottom: 0.75em;
+  font-size: 1.875em;
+  line-height: 1.6em;
+  font-weight: normal;
+  margin-left: 15px;
+  text-shadow: rgba(0, 0, 0, 0.8) 1px 1px 1px;
+}
+#service-status .statuses {
+  display: inline;
+  float: left;
+  margin-right: 10px;
+  width: 190px;
+  float: right;
+  margin: 10px 0;
+}
+* html #service-status .statuses {
+  overflow-x: hidden;
+}
+#service-status .statuses dl {
+  float: right;
+  margin-right: 25px;
+  width: 63px;
+}
+#service-status .statuses dl dt {
+  font-size: 0.688em;
+  line-height: 2.182em;
+  color: #666666;
+  text-transform: uppercase;
+  text-align: right;
+}
+#service-status .statuses dl dd {
+  font-size: 2.125em;
+  line-height: 1.271em;
+  padding: 0 5px;
+  text-align: right;
+}
+
+#nodes .node {
+  overflow: hidden;
+  padding: 10px 15px;
+  border-top: 1px solid #4d4d4d;
+  margin-top: 1px;
+  border-bottom: 1px solid #2b2b2b;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #404040), color-stop(100%, #333333));
+  background: -webkit-linear-gradient(#404040, #333333);
+  background: -moz-linear-gradient(#404040, #333333);
+  background: -o-linear-gradient(#404040, #333333);
+  background: -ms-linear-gradient(#404040, #333333);
+  background: linear-gradient(#404040, #333333);
+  text-shadow: rgba(0, 0, 0, 0.8) 1px 1px 1px;
+  line-height: 1.6em;
+}
+#nodes .name {
+  float: left;
+}
+#nodes .node-status {
+  float: right;
+  margin-right: 10px;
+}
+#nodes .status {
+  display: block;
+  text-indent: -999.9em;
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  font-size: 0.625em;
+  line-height: 1.2em;
+}
+
+#last-updated {
+  float: left;
+}
+#last-updated .datetime {
+  color: #999999;
+}
+
+#filter-options {
+  float: right;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  overflow: hidden;
+  *zoom: 1;
+}
+#filter-options li {
+  list-style-image: none;
+  list-style-type: none;
+  margin-left: 0px;
+  display: -moz-inline-box;
+  -moz-box-orient: vertical;
+  display: inline-block;
+  vertical-align: middle;
+  *vertical-align: auto;
+  white-space: nowrap;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+#filter-options li {
+  *display: inline;
+}
+#filter-options a {
+  padding: 2px 4px;
+}
+#filter-options a:hover {
+  background: #777777;
+  color: #333333;
+  text-decoration: none;
+}
+#filter-options .active a {
+  color: #333333;
+  background: #cccccc;
+}
