@@ -14,17 +14,27 @@
     .body
       #service-status
         .name
-          %h1 Service name
+          %h1= APP_CONFIG["service_name"]
         .statuses
-          %dl
+          %dl.up-status
             %dt Up
-            %dd.status.up 2
-          %dl
+            %dd.status 0
+          %dl.down-status
             %dt Down
-            %dd.status.down 1
+            %dd.status 0
   #nodes.block
     .header
       %span.name NODES
       %span.node-status STATUS
     .body
-      #nodes-status
+      #nodes
+        .node
+          %span.name
+            saeappc.nokia.com
+          %span.node-status
+            %span.status.up
+        .node
+          %span.name
+            saeappc.nokia.com
+          %span.node-status
+            %span.status.down

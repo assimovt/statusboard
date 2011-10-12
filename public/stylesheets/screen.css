@@ -279,7 +279,19 @@ body {
 }
 #nodes .node-status {
   float: right;
-  margin-right: 10px;
+  text-align: right;
+  margin-right: 0;
+  overflow: hidden;
+  background: #262626;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #0d0d0d), color-stop(100%, #262626));
+  background: -webkit-linear-gradient(#0d0d0d, #262626);
+  background: -moz-linear-gradient(#0d0d0d, #262626);
+  background: -o-linear-gradient(#0d0d0d, #262626);
+  background: -ms-linear-gradient(#0d0d0d, #262626);
+  background: linear-gradient(#0d0d0d, #262626);
+}
+#nodes .node-status.wide {
+  width: 102px;
 }
 #nodes .status {
   display: block;
@@ -289,6 +301,35 @@ body {
   padding: 0;
   font-size: 0.625em;
   line-height: 1.2em;
+  float: right;
+}
+#nodes .uptime {
+  display: block;
+  height: 20px;
+  padding: 0 4px;
+  line-height: 22px;
+  width: 92px;
+  border: 2px solid #777777;
+  -moz-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  -webkit-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  -o-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+  text-shadow: rgba(0, 0, 0, 0.4) -1px -1px 0;
+  position: absolute;
+  margin-top: -22px;
+}
+#nodes .progress {
+  background: #3399cc;
+  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #3399cc), color-stop(50%, #3399cc), color-stop(100%, #297aa3));
+  background: -webkit-linear-gradient(#3399cc, #3399cc, #297aa3);
+  background: -moz-linear-gradient(#3399cc, #3399cc, #297aa3);
+  background: -o-linear-gradient(#3399cc, #3399cc, #297aa3);
+  background: -ms-linear-gradient(#3399cc, #3399cc, #297aa3);
+  background: linear-gradient(#3399cc, #3399cc, #297aa3);
+  width: 100px;
+  height: 22px;
+  display: block;
+  margin-left: 2px;
 }
 
 #last-updated {

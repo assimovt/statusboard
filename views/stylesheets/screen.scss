@@ -217,7 +217,15 @@ body {
   
   .node-status {
     float: right;
-    margin-right: 10px;
+    text-align: right;
+    margin-right: 0;
+    overflow: hidden;
+    background: darken($base-shade-color, 5%);
+    @include background(linear-gradient(color-stops(darken($base-shade-color, 15%), darken($base-shade-color, 5%))));
+    
+    &.wide {
+      width: 102px;
+    }
   }
   
   .status {
@@ -227,6 +235,29 @@ body {
     height: 20px;
     padding: 0;
     @include adjust-font-size-to(10px, 0.5);
+    float: right;
+  }
+  
+  .uptime {
+    display: block;
+    height: 20px;
+    padding: 0 4px;
+    line-height: 22px;
+    width: 92px;
+    border: 2px solid $accent-color;
+    @include single-box-shadow(rgba(0, 0, 0, 0.4), 1px, 1px, 2px);
+    @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 0);
+    position: absolute;
+    margin-top: -22px;
+  }
+  
+  .progress {
+    background: $uptime-color;
+    @include background(linear-gradient(color-stops($uptime-color, $uptime-color, darken($uptime-color, 10%))));
+    width: 100px;
+    height: 22px;
+    display: block;
+    margin-left: 2px;
   }
 }
 

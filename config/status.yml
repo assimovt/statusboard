@@ -1,6 +1,6 @@
 common: &common
   title: Status board
-  
+  service_name: Source Nokia
 
 development: &non_production_settings
   <<: *common
