@@ -37,5 +37,5 @@ namespace :status do
 end
 
 task :environment do
-  require File.join(File.dirname(__FILE__), 'environment')
+  require File.join(File.dirname(__FILE__), 'config/environment.rb')
 end
