@@ -5,12 +5,10 @@
         Last updated:
         %span.datetime -
       %ul#filter-options
-        %li#last-24.active
-          %a(href="#") Last 24h
-        %li#last-month
-          %a(href="#") Last month
-        %li#custom-period
-          %a(href="#") Custom period
+        %li.active
+          %a(href="#status") Status
+        %li
+          %a(href="#uptime") Uptime
     .body
       #service-status
         .name
@@ -28,14 +26,3 @@
       %span.node-status STATUS
     .body
       #nodes
-      -#nodes
-        .node
-          %span.name
-            saeappc.nokia.com
-          %span.node-status
-            %span.status.up
-        .node
-          %span.name
-            saeappc.nokia.com
-          %span.node-status
-            %span.status.down

@@ -19,9 +19,43 @@ StatusBoard = (function($) {
     });
   };
   
+  function dateToTimestamp(year,month,day){
+    var dateTime = new Date(Date.UTC(year,month-1,day,0,0,0));
+    return Math.round(dateTime.getTime()/1000);
+  }
+  
+  var getUnixDateTime = function() {
+    return Math.round((new Date()).getTime() / 1000);
+  }
+  
+  var getCurrentDateTime = function(format) {
+    var output = "";
+    var dt = {};
+    var dateTime = new Date();
+    dt.day = dateTime.getDate();
+    dt.month = dateTime.getMonth() + 1;
+    dt.year = dateTime.getFullYear();
+    dt.hours = dateTime.getHours();
+    dt.minutes = dateTime.getMinutes();
+    dt.seconds = dateTime.getSeconds();
+    
+    // Prepend the zero when needed
+    $.each(dt, function(i, d) {
+      if(d < 10) {
+        dt[i] = '0' + d;
+      }
+    });
+
+    if(format === 'y-m-d') {
+      output = dt.year + "-" + dt.month + "-" + dt.day + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
+    } else {
+      output = dt.day + "." + dt.month + "." + dt.year + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
+    }
+    return output;
+  };
+  
   var updateTime = function() {
-    var currentTime = new Date();
-    $('.datetime').html(currentTime.getDate() + "." + (currentTime.getMonth()+1) + "."+ currentTime.getFullYear() + " " + currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds());  
+    $('.datetime').html(getCurrentDateTime);  
   };
   
   var startInt = function(func) {
@@ -56,7 +90,7 @@ StatusBoard = (function($) {
   };
   
   var countStatuses = function(statuses, status) {
-    if(status === "true") {
+    if(status) {
       statuses.up++;
     } else {
       statuses.down++;
@@ -128,13 +162,15 @@ StatusBoard = (function($) {
     //stopInt();
     $(serviceStatusContainer).slideUp();
     $(lastUpdateEl).fadeOut();
-
     $.each(nodes, function(i, n){
       var jqxhr = $.ajax({
         url: "uptime",
         type: "GET",
-        data: {start_time: "2011-10-01 12:22:26", end_time: "2011-10-20 12:22:26", node: n},
+        data: {start_time: startTime, end_time: endTime, node: n},
         success: function(data) {
+          if(data.length === 0) {
+            data = 0;
+          }
           output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data});
         },
         error: function() { showError("Sorry, couldn't load data."); }
@@ -149,9 +185,6 @@ StatusBoard = (function($) {
         loaded = 0;
       }
     });
-    
-    //startTime = (startTime.length > 0) ? "" : "";
-    //endTime = (endTime.length > 0) ? "" : "";
   };
   
   var showStats = function() {
@@ -172,7 +205,13 @@ StatusBoard = (function($) {
       // Switch the view based on selection
       switch(activeTab) {
         case '#uptime':
-          showUptime();
+          var dateTime = new Date();
+          var year = dateTime.getFullYear();
+          var month = dateTime.getMonth() + 1;
+          var day = dateTime.getDate();
+          var startTime = dateToTimestamp(year, month, 1);
+          var endTime = dateToTimestamp(year, month, day);
+          showUptime(startTime, endTime);
         break;
         
         default:
