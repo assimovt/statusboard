@@ -19,8 +19,8 @@ StatusBoard = (function($) {
     });
   };
   
-  function dateToTimestamp(year,month,day){
-    var dateTime = new Date(Date.UTC(year,month-1,day,0,0,0));
+  function dateToTimestamp(year,month,day,hours,minutes,seconds){
+    var dateTime = new Date(Date.UTC(year,month-1,day,hours,minutes,seconds));
     return Math.round(dateTime.getTime()/1000);
   }
   
@@ -209,8 +209,9 @@ StatusBoard = (function($) {
           var year = dateTime.getFullYear();
           var month = dateTime.getMonth() + 1;
           var day = dateTime.getDate();
-          var startTime = dateToTimestamp(year, month, 1);
-          var endTime = dateToTimestamp(year, month, day);
+          var startTime = dateToTimestamp(year, month, 1, 0, 0, 0);
+          var endTime = dateToTimestamp(year, month, day, 23, 59, 59);
+          
           showUptime(startTime, endTime);
         break;
         
