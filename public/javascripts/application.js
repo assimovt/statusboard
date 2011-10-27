@@ -5,7 +5,8 @@ StatusBoard = (function($) {
       nodesContainer = '#nodes',
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
       uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{uptime}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
-      timer = '';
+      timer = '',
+      nodes = new Array();
   
   var updateTime = function() {
     var currentTime = new Date();
@@ -63,7 +64,6 @@ StatusBoard = (function($) {
      
     function loadData() {
       hideError();
-      console.log('timer +');
       
       $.ajax({
         url: "statuses.json",
@@ -71,44 +71,60 @@ StatusBoard = (function($) {
         dataType: "json",
         success: function(data) {
           $.each(data, function(i, node) {
+            nodes.push(node.uri);
             output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
             if(node.status === "true") {
-              statuses.up += 1;
+              statuses.up++;
             } else {
-              statuses.down += 1;
+              statuses.down++;
             }
           });
-  
           updateStatuses(statuses);
-          $(nodesContainer).html(output);
-          updateTime();
-          output = "", statuses = {up:0, down:0};
         },
         error: function() { showError("Sorry, couldn't load data."); }
       });
+      
+      $(nodesContainer).ajaxComplete(function(){
+        updateTime();
+        $(this).html(output);
+        output = "", statuses = {up:0, down:0};
+      });
     }
-
-    startInt(loadData);
+    
+    loadData();
+    //startInt(loadData);
   };
   
   var showUptime = function(startTime, endTime) {
     var output = "";
-        
     stopInt();
+    showLoader();
+    hideError();
     $(serviceStatusContainer).slideUp();
     $(lastUpdateEl).fadeOut();
-    // FIXME: Use path to get JSON 
-    var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
+    var loaded = 0;
+    
+    $.each(nodes, function(i, n){
+      $.get(
+        "uptime",
+        {start_time: "2011-10-01 12:22:26", end_time: "2011-10-20 12:22:26", node: n},  
+        function(uptimeResult) {
+          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: uptimeResult});
+        }
+      );
+    });
+    
+    $(nodesContainer).ajaxComplete(function() {
+      loaded++;
+      if(loaded === nodes.length) {
+        $(this).html(output);
+        output = "";
+        loaded = 0;
+      }
+    });
     
     //startTime = (startTime.length > 0) ? "" : "";
     //endTime = (endTime.length > 0) ? "" : "";
-    
-    $.each(obj, function(i, node) {
-      // FIXME: Request node uptime
-      output += Mustache.to_html(uptimeTmpl, {uri: node.uri, uptime: 3});
-    });
-    
-    $(nodesContainer).html(output);
   };
   
   var showStats = function() {

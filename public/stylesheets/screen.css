@@ -208,6 +208,16 @@ body {
   background: linear-gradient(#f76161, #f53030);
 }
 
+.error-msg {
+  margin: 10px 20px 0 20px;
+  display: block;
+}
+
+.loader {
+  padding: 40px;
+  text-align: center;
+}
+
 #service-status {
   overflow: hidden;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #404040), color-stop(100%, #333333));
