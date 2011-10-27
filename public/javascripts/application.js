@@ -20,7 +20,7 @@ StatusBoard = (function($) {
     }
   };
 
-  var stopInt = function(func) {
+  var stopInt = function() {
     if(timer !== "") {
       window.clearInterval(timer);
       timer = "";
@@ -43,27 +43,52 @@ StatusBoard = (function($) {
     });
   };
   
+  var showError = function(msg) {
+    $("#wrapper").prepend('<div class="error-msg">'+msg+'</div>');
+  };
+  
+  var hideError = function() {
+    $(".error-msg").hide();
+  };
+  
+  var showLoader = function() {
+    $(nodesContainer).html('<div class="loader">Loading..</div>');
+  };
+  
   var showStatus = function() {
-    var output = "", statuses = {up:0, down:0};
-    // FIXME: Use path to get JSON
-    var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":false, "uri":"server 3"}, {"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
-
     $(serviceStatusContainer).slideDown();
     $(lastUpdateEl).fadeIn();
-    //$.getJSON(url+query,function(json){});
-    
-    $.each(obj, function(i, node) {
-      output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
-      if(node.status) {
-        statuses.up += 1;
-      } else {
-        statuses.down += 1;
-      }
-    });
+    showLoader();
+    var output = "", statuses = {up:0, down:0};
+     
+    function loadData() {
+      hideError();
+      console.log('timer +');
+      
+      $.ajax({
+        url: "statuses.json",
+        type: "GET",
+        dataType: "json",
+        success: function(data) {
+          $.each(data, function(i, node) {
+            output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
+            if(node.status === "true") {
+              statuses.up += 1;
+            } else {
+              statuses.down += 1;
+            }
+          });
+  
+          updateStatuses(statuses);
+          $(nodesContainer).html(output);
+          updateTime();
+          output = "", statuses = {up:0, down:0};
+        },
+        error: function() { showError("Sorry, couldn't load data."); }
+      });
+    }
 
-    updateStatuses(statuses);
-    $(nodesContainer).html(output);
-    updateTime();
+    startInt(loadData);
   };
   
   var showUptime = function(startTime, endTime) {
@@ -112,14 +137,14 @@ StatusBoard = (function($) {
         break;
         
         default:
-          startInt(showStatus);
+          showStatus();
       }
       
       return false;
     });
     
     if($('#filter-options li').hasClass('active')){
-      startInt(showStatus);
+      showStatus();
     }
   };
   

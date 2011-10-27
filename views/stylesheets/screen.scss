@@ -146,6 +146,16 @@ body {
   }
 }
 
+.error-msg {
+  margin: 10px 20px 0 20px;
+  display: block;
+}
+
+.loader {
+  padding: 40px;
+  text-align: center;
+}
+
 #service-status {
   overflow: hidden;
   @include background(linear-gradient(color-stops(lighten($base-shade-color, 5%), $base-shade-color)));
