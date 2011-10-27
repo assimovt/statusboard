@@ -6,7 +6,18 @@ StatusBoard = (function($) {
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
       uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{uptime}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
       timer = '',
-      nodes = new Array();
+      nodesCount = 0,
+      nodes = [],
+      ajaxRequests = [];
+      
+  var stopAjaxRequests = function() {
+    $.each(ajaxRequests, function(i, request){
+      request.abort();
+      $.grep(ajaxRequests, function(value) {
+        return value != request;
+      });
+    });
+  };
   
   var updateTime = function() {
     var currentTime = new Date();
@@ -33,7 +44,7 @@ StatusBoard = (function($) {
   };
 
   var updateStatuses = function(statuses) {
-    $.each(statuses, function(key, value){
+    $.each(statuses, function(key, value) {
       var status = $("#service-status ." + key+"-status").find('.status');
       status.html(value);
       if(value > 0) {
@@ -42,6 +53,16 @@ StatusBoard = (function($) {
         status.removeClass(key);
       }
     });
+  };
+  
+  var countStatuses = function(statuses, status) {
+    if(status === "true") {
+      statuses.up++;
+    } else {
+      statuses.down++;
+    }
+    
+    return statuses;
   };
   
   var showError = function(msg) {
@@ -53,41 +74,48 @@ StatusBoard = (function($) {
   };
   
   var showLoader = function() {
-    $(nodesContainer).html('<div class="loader">Loading..</div>');
+    // Show loader when ajaxRequest is made
+    $(nodesContainer).ajaxStart(function() {
+      $(nodesContainer).html('<div class="loader">Loading..</div>');
+    });
+  };
+  
+  var createNodesList = function(node) {
+    if(nodes.length < nodesCount) {
+      nodes.push(node);
+    }
   };
   
   var showStatus = function() {
+    var output = "", statuses = {up:0, down:0};
     $(serviceStatusContainer).slideDown();
     $(lastUpdateEl).fadeIn();
-    showLoader();
-    var output = "", statuses = {up:0, down:0};
      
     function loadData() {
-      hideError();
-      
-      $.ajax({
+      var jqxhr = $.ajax({
         url: "statuses.json",
         type: "GET",
         dataType: "json",
         success: function(data) {
           $.each(data, function(i, node) {
-            nodes.push(node.uri);
+            countStatuses(statuses, node.status);
             output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
-            if(node.status === "true") {
-              statuses.up++;
-            } else {
-              statuses.down++;
-            }
+            nodesCount++;
+            createNodesList(node.uri);
           });
           updateStatuses(statuses);
         },
         error: function() { showError("Sorry, couldn't load data."); }
       });
       
+      //ajaxRequests.push(jqxhr);
+      
       $(nodesContainer).ajaxComplete(function(){
         updateTime();
         $(this).html(output);
-        output = "", statuses = {up:0, down:0};
+        output = "";
+        nodesCount = 0;
+        statuses = {up:0, down:0};
       });
     }
     
@@ -96,22 +124,21 @@ StatusBoard = (function($) {
   };
   
   var showUptime = function(startTime, endTime) {
-    var output = "";
-    stopInt();
-    showLoader();
-    hideError();
+    var output = "", loaded = 0;
+    //stopInt();
     $(serviceStatusContainer).slideUp();
     $(lastUpdateEl).fadeOut();
-    var loaded = 0;
-    
+
     $.each(nodes, function(i, n){
-      $.get(
-        "uptime",
-        {start_time: "2011-10-01 12:22:26", end_time: "2011-10-20 12:22:26", node: n},  
-        function(uptimeResult) {
-          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: uptimeResult});
-        }
-      );
+      var jqxhr = $.ajax({
+        url: "uptime",
+        type: "GET",
+        data: {start_time: "2011-10-01 12:22:26", end_time: "2011-10-20 12:22:26", node: n},
+        success: function(data) {
+          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data});
+        },
+        error: function() { showError("Sorry, couldn't load data."); }
+      });
     });
     
     $(nodesContainer).ajaxComplete(function() {
@@ -129,27 +156,23 @@ StatusBoard = (function($) {
   
   var showStats = function() {
     var activeClass = 'active';
+    showLoader();
     
     $('#filter-options a').click(function(){
-      var el = $(this).parent();
-      var elId = el.attr('id');
-      stopInt();
+      var el = $(this);
+      var activeTab = el.attr("href");
+      hideError();
+      //stopAjaxRequests();
+      //stopInt();
       
       // Set active class
       $('#filter-options li').removeClass(activeClass);
-      el.addClass(activeClass);
+      el.parent().addClass(activeClass);
       
-      // Update view based on selection
-      switch(elId) {
-        case 'last-month':
+      // Switch the view based on selection
+      switch(activeTab) {
+        case '#uptime':
           showUptime();
-        break;
-        
-        case 'custom-period':
-          // get time
-          var startTime = "";
-          var endTime = "";
-          showUptime(startTime, endTime);
         break;
         
         default:
