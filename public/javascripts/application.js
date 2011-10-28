@@ -1,7 +1,9 @@
 StatusBoard = (function($) {
   var refreshRate = 2000,
       serviceStatusContainer = '#service-status',
+      serviceUptimeContainer = '#service-uptime',
       lastUpdateEl = '#last-updated',
+      uptimePeriodEl = '#uptime-period',
       nodesContainer = '#nodes',
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
       uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{uptime}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
@@ -28,10 +30,11 @@ StatusBoard = (function($) {
     return Math.round((new Date()).getTime() / 1000);
   }
   
-  var getCurrentDateTime = function(format) {
+  var getCurrentDateTime = function(format, timestamp) {
     var output = "";
     var dt = {};
-    var dateTime = new Date();
+    var dateTime = (timestamp === 0) ? new Date() : new Date(timestamp*1000);
+    
     dt.day = dateTime.getDate();
     dt.month = dateTime.getMonth() + 1;
     dt.year = dateTime.getFullYear();
@@ -46,16 +49,24 @@ StatusBoard = (function($) {
       }
     });
 
-    if(format === 'y-m-d') {
-      output = dt.year + "-" + dt.month + "-" + dt.day + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
-    } else {
-      output = dt.day + "." + dt.month + "." + dt.year + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
+    switch(format) {
+      case 'y-m-d h:m:s':
+        output = dt.year + "-" + dt.month + "-" + dt.day + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
+      break;
+      
+      case 'd.m.y':
+        output = dt.day + "." + dt.month + "." + dt.year;
+      break;
+      
+      default:
+        output = dt.day + "." + dt.month + "." + dt.year + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
     }
+    
     return output;
   };
   
   var updateTime = function() {
-    $('.datetime').html(getCurrentDateTime);  
+    $(lastUpdateEl).find('.datetime').html(getCurrentDateTime('', 0));
   };
   
   var startInt = function(func) {
@@ -122,7 +133,11 @@ StatusBoard = (function($) {
   
   var showStatus = function() {
     var output = "", statuses = {up:0, down:0};
-    $(serviceStatusContainer).slideDown();
+    $(serviceUptimeContainer).fadeOut(400, function(){
+      $(serviceStatusContainer).fadeIn();
+    });
+    $(uptimePeriodEl).hide();
+    $(lastUpdateEl).find('.datetime').html();
     $(lastUpdateEl).fadeIn();
      
     function loadData() {
@@ -144,7 +159,7 @@ StatusBoard = (function($) {
       
       //ajaxRequests.push(jqxhr);
       
-      $(nodesContainer).ajaxComplete(function(){
+      $(nodesContainer).ajaxComplete(function() {
         updateTime();
         $(this).html(output);
         output = "";
@@ -158,11 +173,14 @@ StatusBoard = (function($) {
   };
   
   var showUptime = function(startTime, endTime) {
-    var output = "", loaded = 0;
+    var output = "", loaded = 0, totalUptime = 0;
     //stopInt();
-    $(serviceStatusContainer).slideUp();
+    $(serviceStatusContainer).fadeOut(400, function(){
+      $(serviceUptimeContainer).fadeIn();
+    });
+
     $(lastUpdateEl).fadeOut();
-    $.each(nodes, function(i, n){
+    $.each(nodes, function(i, n) {
       var jqxhr = $.ajax({
         url: "uptime",
         type: "GET",
@@ -170,7 +188,10 @@ StatusBoard = (function($) {
         success: function(data) {
           if(data.length === 0) {
             data = 0;
+          }else {
+            data = Math.round(data);
           }
+          totalUptime += data;
           output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data});
         },
         error: function() { showError("Sorry, couldn't load data."); }
@@ -179,7 +200,12 @@ StatusBoard = (function($) {
     
     $(nodesContainer).ajaxComplete(function() {
       loaded++;
+      
       if(loaded === nodes.length) {
+        $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(totalUptime/nodes.length + " %");
+        $(uptimePeriodEl).find('.date-from').html(getCurrentDateTime('d.m.y', startTime));
+        $(uptimePeriodEl).find('.date-to').html(getCurrentDateTime('d.m.y', endTime));
+        $(uptimePeriodEl).fadeIn();
         $(this).html(output);
         output = "";
         loaded = 0;
@@ -210,8 +236,7 @@ StatusBoard = (function($) {
           var month = dateTime.getMonth() + 1;
           var day = dateTime.getDate();
           var startTime = dateToTimestamp(year, month, 1, 0, 0, 0);
-          var endTime = dateToTimestamp(year, month, day, 23, 59, 59);
-          
+          var endTime = getUnixDateTime();
           showUptime(startTime, endTime);
         break;
         

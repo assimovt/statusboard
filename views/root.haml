@@ -4,6 +4,11 @@
       #last-updated
         Last updated:
         %span.datetime -
+      #uptime-period.hidden
+        Uptime during:
+        %span.datetime.date-from
+        \-
+        %span.datetime.date-to
       %ul#filter-options
         %li.active
           %a(href="#status") Status
@@ -19,6 +24,13 @@
             %dd.status 0
           %dl.down-status
             %dt Down
+            %dd.status 0
+      #service-uptime.hidden
+        .name
+          %h1= APP_CONFIG["service_name"]
+        .statuses
+          %dl.total-uptime
+            %dt Total uptime
             %dd.status 0
   #nodes.block
     .header

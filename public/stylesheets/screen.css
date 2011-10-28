@@ -188,6 +188,7 @@ body {
   -o-box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
   box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
   text-shadow: rgba(0, 0, 0, 0.4) -1px -1px 0;
+  color: #5e5e5e;
 }
 .status.up {
   background: #4b9900;
@@ -197,6 +198,7 @@ body {
   background: -o-linear-gradient(#4b9900, #326600);
   background: -ms-linear-gradient(#4b9900, #326600);
   background: linear-gradient(#4b9900, #326600);
+  color: white;
 }
 .status.down {
   background: #f76161;
@@ -206,6 +208,10 @@ body {
   background: -o-linear-gradient(#f76161, #f53030);
   background: -ms-linear-gradient(#f76161, #f53030);
   background: linear-gradient(#f76161, #f53030);
+  color: white;
+}
+.status.uptime {
+  color: white;
 }
 
 .error-msg {
@@ -218,7 +224,7 @@ body {
   text-align: center;
 }
 
-#service-status {
+#service-status, #service-uptime {
   overflow: hidden;
   background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #404040), color-stop(100%, #333333));
   background: -webkit-linear-gradient(#404040, #333333);
@@ -227,10 +233,10 @@ body {
   background: -ms-linear-gradient(#404040, #333333);
   background: linear-gradient(#404040, #333333);
 }
-#service-status .name {
+#service-status .name, #service-uptime .name {
   float: left;
 }
-#service-status .name h1 {
+#service-status .name h1, #service-uptime .name h1 {
   margin-top: 1.2em;
   margin-bottom: 0.75em;
   font-size: 1.875em;
@@ -239,7 +245,7 @@ body {
   margin-left: 15px;
   text-shadow: rgba(0, 0, 0, 0.8) 1px 1px 1px;
 }
-#service-status .statuses {
+#service-status .statuses, #service-uptime .statuses {
   display: inline;
   float: left;
   margin-right: 10px;
@@ -247,26 +253,30 @@ body {
   float: right;
   margin: 10px 0;
 }
-* html #service-status .statuses {
+* html #service-status .statuses, * html #service-uptime .statuses {
   overflow-x: hidden;
 }
-#service-status .statuses dl {
+#service-status .statuses dl, #service-uptime .statuses dl {
   float: right;
   margin-right: 25px;
   width: 63px;
 }
-#service-status .statuses dl dt {
+#service-status .statuses dl dt, #service-uptime .statuses dl dt {
   font-size: 0.688em;
   line-height: 2.182em;
   color: #666666;
   text-transform: uppercase;
   text-align: right;
 }
-#service-status .statuses dl dd {
+#service-status .statuses dl dd, #service-uptime .statuses dl dd {
   font-size: 2.125em;
   line-height: 1.271em;
   padding: 0 5px;
   text-align: right;
+}
+
+#service-uptime .statuses dl {
+  width: 100px;
 }
 
 #nodes .node {
@@ -342,10 +352,10 @@ body {
   margin-left: 2px;
 }
 
-#last-updated {
+#last-updated, #uptime-period {
   float: left;
 }
-#last-updated .datetime {
+#last-updated .datetime, #uptime-period .datetime {
   color: #999999;
 }
 

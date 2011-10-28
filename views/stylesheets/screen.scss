@@ -132,17 +132,24 @@ body {
   border: 2px solid $accent-color;
   @include single-box-shadow(rgba(0, 0, 0, 0.4), 1px, 1px, 2px);
   @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 0);
+  color: darken($accent-color, 10%);
   
   &.up {
     background: $up-color;
     @include background(linear-gradient(color-stops($up-color, darken($up-color, 10%))));
     //@include single-box-shadow(rgba(75, 153, 0, 0.4), 0, 0, 10px);
+    color: $white-color;
   }
     
   &.down {
     background: $down-color;
     @include background(linear-gradient(color-stops($down-color, darken($down-color, 10%))));
     //@include single-box-shadow(rgba(247, 97, 97, 0.4), 0, 0, 10px);
+    color: $white-color;
+  }
+  
+  &.uptime {
+    color: $white-color;
   }
 }
 
@@ -156,7 +163,7 @@ body {
   text-align: center;
 }
 
-#service-status {
+#service-status, #service-uptime {
   overflow: hidden;
   @include background(linear-gradient(color-stops(lighten($base-shade-color, 5%), $base-shade-color)));
    
@@ -205,6 +212,14 @@ body {
         dd {
         }
       }
+    }
+  }
+}
+
+#service-uptime {
+  .statuses {
+    dl {
+      width: 100px;
     }
   }
 }
@@ -271,7 +286,7 @@ body {
   }
 }
 
-#last-updated {
+#last-updated, #uptime-period {
   float: left;
   
   .datetime {
