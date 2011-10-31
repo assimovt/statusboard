@@ -1,4 +1,4 @@
-StatusBoard = (function($) {
+var StatusBoard = (function($) {
   var refreshRate = 2000,
       serviceStatusContainer = '#service-status',
       serviceUptimeContainer = '#service-uptime',
@@ -16,19 +16,19 @@ StatusBoard = (function($) {
     $.each(ajaxRequests, function(i, request){
       request.abort();
       $.grep(ajaxRequests, function(value) {
-        return value != request;
+        return value !== request;
       });
     });
   };
   
-  function dateToTimestamp(year,month,day,hours,minutes,seconds){
+  var dateToTimestamp = function(year,month,day,hours,minutes,seconds){
     var dateTime = new Date(Date.UTC(year,month-1,day,hours,minutes,seconds));
     return Math.round(dateTime.getTime()/1000);
-  }
+  };
   
   var getUnixDateTime = function() {
     return Math.round((new Date()).getTime() / 1000);
-  }
+  };
   
   var getCurrentDateTime = function(format, timestamp) {
     var output = "";
@@ -69,6 +69,13 @@ StatusBoard = (function($) {
     $(lastUpdateEl).find('.datetime').html(getCurrentDateTime('', 0));
   };
   
+  var stopInt = function() {
+    if(timer !== "") {
+      window.clearInterval(timer);
+      timer = "";
+    }
+  };
+  
   var startInt = function(func) {
     if(timer === "") {
       timer = window.setInterval(func, refreshRate);
@@ -77,12 +84,7 @@ StatusBoard = (function($) {
     }
   };
 
-  var stopInt = function() {
-    if(timer !== "") {
-      window.clearInterval(timer);
-      timer = "";
-    }
-  };
+
   
   var getStatus = function(status) {
     return (status) ? 'up':'down'; 
@@ -129,6 +131,49 @@ StatusBoard = (function($) {
     if(nodes.length < nodesCount) {
       nodes.push(node);
     }
+  };
+  
+   var enableDatePicker = function() {    
+    // Set default dates
+    if($('#from').val().length === 0 && $('#to').val().length === 0) {
+      var dateTime = new Date();
+      var year = dateTime.getFullYear();
+      var startMonth = dateTime.getMonth();
+      var endMonth = dateTime.getMonth()+1;
+      var day = dateTime.getDate();
+      var startDate = day+"."+startMonth+"."+year;
+      var endDate = day+"."+endMonth+"."+year;
+      
+      $('#from').val(startDate);
+      $('#to').val(endDate);
+      
+      $('#actualdate-from').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
+      $('#actualdate-to').val(dateToTimestamp(year, endMonth, day, 0, 0, 0));
+    }
+    
+    // Enable datepicker
+    $.datepicker.setDefaults({
+      dateFormat: 'dd.mm.yy',
+      altFormat: '@',
+      changeMonth: true,
+      showOn: "button",
+      buttonImage: "images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: 'Choose date'});
+  
+    var dateFrom = $('#from').datepicker({
+      altField: '#actualdate-from',
+      onSelect: function(selectedDate) {
+        dateTo.datepicker('option', 'minDate', dateFrom.datepicker('getDate'));
+      }
+    });
+        
+    var dateTo = $('#to').datepicker({
+      altField: '#actualdate-to',
+      onSelect: function(selectedDate) {
+        dateFrom.datepicker('option', 'maxDate', dateTo.datepicker('getDate'));
+      }
+    });
   };
   
   var showStatus = function() {
@@ -179,21 +224,26 @@ StatusBoard = (function($) {
       $(serviceUptimeContainer).fadeIn();
       $(uptimePeriodEl).show();
 
+      $('#update-uptime').click(function() {
+        showUptime();
+        return false;
+      });
     });
+    
     enableDatePicker();
     var startTime = $('#actualdate-from').val();
     var endTime = $('#actualdate-to').val();
 
         // Fix times
-    if(startTime.length == 13) {
+    if(startTime.length === 13) {
       startTime = startTime/1000;
     }
     
-    if(endTime.length == 13) {
+    if(endTime.length === 13) {
       endTime = endTime/1000;
     }
     
-    endTime = parseInt(endTime) + (60*60*23 + 59*60 +59);
+    endTime = parseInt(endTime, 10) + (60*60*23 + 59*60 +59);
 
     //stopInt();
 
@@ -225,54 +275,6 @@ StatusBoard = (function($) {
     });
   };
   
-  var enableDatePicker = function() {    
-    // Set default dates
-    if($('#from').val().length == 0 && $('#to').val().length == 0) {
-      var dateTime = new Date();
-      var year = dateTime.getFullYear();
-      var startMonth = dateTime.getMonth();
-      var endMonth = dateTime.getMonth()+1;
-      var day = dateTime.getDate();
-      var startDate = day+"."+startMonth+"."+year;
-      var endDate = day+"."+endMonth+"."+year;
-      
-      $('#from').val(startDate);
-      $('#to').val(endDate);
-      
-      $('#actualdate-from').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
-      $('#actualdate-to').val(dateToTimestamp(year, endMonth, day, 0, 0, 0));
-    }
-    
-    // Enable datepicker
-    $.datepicker.setDefaults({
-      dateFormat: 'dd.mm.yy',
-      altFormat: '@',
-      changeMonth: true,
-      showOn: "button",
-      buttonImage: "images/calendar.gif",
-      buttonImageOnly: true,
-      buttonText: 'Choose date'});
-  
-    var dateFrom = $('#from').datepicker({
-      altField: '#actualdate-from',
-      onSelect: function(selectedDate) {
-        dateTo.datepicker('option', 'minDate', dateFrom.datepicker('getDate'));
-      }
-    });
-        
-    var dateTo = $('#to').datepicker({
-      altField: '#actualdate-to',
-      onSelect: function(selectedDate) {
-        dateFrom.datepicker('option', 'maxDate', dateTo.datepicker('getDate'));
-      }
-    });  
-    
-    $('#update-uptime').click(function() {
-      showUptime();
-      return false;
-    });
-  };
-  
   var showStats = function() {
     var activeClass = 'active';
     showLoader();
@@ -289,13 +291,10 @@ StatusBoard = (function($) {
       el.parent().addClass(activeClass);
       
       // Switch the view based on selection
-      switch(activeTab) {
-        case '#uptime':
-          showUptime();
-        break;
-        
-        default:
-          showStatus();
+      if(activeTab === '#uptime') {
+        showUptime();
+      } else {
+        showStatus();
       }
       
       return false;
