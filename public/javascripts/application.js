@@ -178,13 +178,13 @@ StatusBoard = (function($) {
     $(serviceStatusContainer).fadeOut(400, function(){
       $(serviceUptimeContainer).fadeIn();
       $(uptimePeriodEl).show();
-      enableDatePicker();
+
     });
-    
-    var startTime = $(uptimePeriodEl).find('#actualdate-from').val();
-    var endTime = $(uptimePeriodEl).find('#actualdate-to').val();
-    
-    // Fix times
+    enableDatePicker();
+    var startTime = $('#actualdate-from').val();
+    var endTime = $('#actualdate-to').val();
+
+        // Fix times
     if(startTime.length == 13) {
       startTime = startTime/1000;
     }
@@ -225,12 +225,10 @@ StatusBoard = (function($) {
     });
   };
   
-  var enableDatePicker = function() {
-    var dateTime;
-    
+  var enableDatePicker = function() {    
     // Set default dates
     if($('#from').val().length == 0 && $('#to').val().length == 0) {
-      dateTime = new Date();
+      var dateTime = new Date();
       var year = dateTime.getFullYear();
       var startMonth = dateTime.getMonth();
       var endMonth = dateTime.getMonth()+1;
@@ -242,7 +240,7 @@ StatusBoard = (function($) {
       $('#to').val(endDate);
       
       $('#actualdate-from').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
-      $('#actualdate-to').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
+      $('#actualdate-to').val(dateToTimestamp(year, endMonth, day, 0, 0, 0));
     }
     
     // Enable datepicker
@@ -252,7 +250,8 @@ StatusBoard = (function($) {
       changeMonth: true,
       showOn: "button",
       buttonImage: "images/calendar.gif",
-      buttonImageOnly: true});
+      buttonImageOnly: true,
+      buttonText: 'Choose date'});
   
     var dateFrom = $('#from').datepicker({
       altField: '#actualdate-from',
