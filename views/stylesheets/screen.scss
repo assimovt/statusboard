@@ -1,4 +1,5 @@
 @import "base";
+@import "jquery.ui";
 
 /* Typography */
 
@@ -219,7 +220,7 @@ body {
 #service-uptime {
   .statuses {
     dl {
-      width: 100px;
+      width: 130px;
     }
   }
 }
@@ -292,6 +293,20 @@ body {
   .datetime {
     color: lighten($label-color, 20%);
   }
+}
+
+.datepicker {
+  border: none;
+  background: none;
+  color: $white-color;
+  display: inline-block;
+  width: 70px;
+}
+
+.ui-datepicker-trigger{
+  position: relative;
+  top: 4px;
+  margin-right: 5px;
 }
 
 #filter-options {

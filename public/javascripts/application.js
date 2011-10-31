@@ -172,12 +172,30 @@ StatusBoard = (function($) {
     //startInt(loadData);
   };
   
-  var showUptime = function(startTime, endTime) {
+  var showUptime = function() {
     var output = "", loaded = 0, totalUptime = 0;
-    //stopInt();
+    
     $(serviceStatusContainer).fadeOut(400, function(){
       $(serviceUptimeContainer).fadeIn();
+      $(uptimePeriodEl).show();
+      enableDatePicker();
     });
+    
+    var startTime = $(uptimePeriodEl).find('#actualdate-from').val();
+    var endTime = $(uptimePeriodEl).find('#actualdate-to').val();
+    
+    // Fix times
+    if(startTime.length == 13) {
+      startTime = startTime/1000;
+    }
+    
+    if(endTime.length == 13) {
+      endTime = endTime/1000;
+    }
+    
+    endTime = parseInt(endTime) + (60*60*23 + 59*60 +59);
+
+    //stopInt();
 
     $(lastUpdateEl).fadeOut();
     $.each(nodes, function(i, n) {
@@ -202,14 +220,60 @@ StatusBoard = (function($) {
       loaded++;
       
       if(loaded === nodes.length) {
-        $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(totalUptime/nodes.length + " %");
-        $(uptimePeriodEl).find('.date-from').html(getCurrentDateTime('d.m.y', startTime));
-        $(uptimePeriodEl).find('.date-to').html(getCurrentDateTime('d.m.y', endTime));
-        $(uptimePeriodEl).fadeIn();
+        $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(totalUptime/nodes.length + " %");        
         $(this).html(output);
         output = "";
         loaded = 0;
       }
+    });
+  };
+  
+  var enableDatePicker = function() {
+    var dateTime;
+    
+    // Set default dates
+    if($('#from').val().length == 0 && $('#to').val().length == 0) {
+      dateTime = new Date();
+      var year = dateTime.getFullYear();
+      var startMonth = dateTime.getMonth();
+      var endMonth = dateTime.getMonth()+1;
+      var day = dateTime.getDate();
+      var startDate = day+"."+startMonth+"."+year;
+      var endDate = day+"."+endMonth+"."+year;
+      
+      $('#from').val(startDate);
+      $('#to').val(endDate);
+      
+      $('#actualdate-from').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
+      $('#actualdate-to').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
+    }
+    
+    // Enable datepicker
+    $.datepicker.setDefaults({
+      dateFormat: 'dd.mm.yy',
+      altFormat: '@',
+      changeMonth: true,
+      showOn: "button",
+      buttonImage: "images/calendar.gif",
+      buttonImageOnly: true});
+  
+    var dateFrom = $('#from').datepicker({
+      altField: '#actualdate-from',
+      onSelect: function(selectedDate) {
+        dateTo.datepicker('option', 'minDate', dateFrom.datepicker('getDate'));
+      }
+    });
+        
+    var dateTo = $('#to').datepicker({
+      altField: '#actualdate-to',
+      onSelect: function(selectedDate) {
+        dateFrom.datepicker('option', 'maxDate', dateTo.datepicker('getDate'));
+      }
+    });  
+    
+    $('#update-uptime').click(function() {
+      showUptime();
+      return false;
     });
   };
   
@@ -231,13 +295,7 @@ StatusBoard = (function($) {
       // Switch the view based on selection
       switch(activeTab) {
         case '#uptime':
-          var dateTime = new Date();
-          var year = dateTime.getFullYear();
-          var month = dateTime.getMonth() + 1;
-          var day = dateTime.getDate();
-          var startTime = dateToTimestamp(year, month, 1, 0, 0, 0);
-          var endTime = getUnixDateTime();
-          showUptime(startTime, endTime);
+          showUptime();
         break;
         
         default:

@@ -5,10 +5,16 @@
         Last updated:
         %span.datetime -
       #uptime-period.hidden
-        Uptime during:
-        %span.datetime.date-from
-        \-
-        %span.datetime.date-to
+        Uptime from
+        %span
+          %input{:type => 'text', :id => 'from', :class => 'datepicker', :name => 'from', :readonly => true}
+          %input{:type => 'hidden', :id => 'actualdate-from', :class => 'datepicker-alt', :name => 'actualdate-from'}
+        to
+        %span
+          %input{:type => 'text', :id => 'to', :class => 'datepicker', :name => 'to', :readonly => true}
+          %input{:type => 'hidden', :id => 'actualdate-to', :class => 'datepicker-alt', :name => 'actualdate-to'}
+        %a#update-uptime(href="#status") Update
+
       %ul#filter-options
         %li.active
           %a(href="#status") Status
