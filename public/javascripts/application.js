@@ -6,7 +6,7 @@ StatusBoard = (function($) {
       uptimePeriodEl = '#uptime-period',
       nodesContainer = '#nodes',
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
-      uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{uptime}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
+      uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{width}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
       timer = '',
       nodesCount = 0,
       nodes = [],
@@ -173,7 +173,7 @@ StatusBoard = (function($) {
   };
   
   var showUptime = function() {
-    var output = "", loaded = 0, totalUptime = 0;
+    var output = "", loaded = 0;
     
     $(serviceStatusContainer).fadeOut(400, function(){
       $(serviceUptimeContainer).fadeIn();
@@ -206,11 +206,8 @@ StatusBoard = (function($) {
         success: function(data) {
           if(data.length === 0) {
             data = 0;
-          }else {
-            data = Math.round(data);
           }
-          totalUptime += data;
-          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data});
+          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data, width: Math.round(data)});
         },
         error: function() { showError("Sorry, couldn't load data."); }
       });
@@ -220,7 +217,7 @@ StatusBoard = (function($) {
       loaded++;
       
       if(loaded === nodes.length) {
-        $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(totalUptime/nodes.length + " %");        
+        //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(totalUptime/nodes.length + " %");        
         $(this).html(output);
         output = "";
         loaded = 0;
