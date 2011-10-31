@@ -7,4 +7,7 @@ log/*
 *.komodoproject
 .sass-cache/
 config/status.yml
+config/database.yml
 *.DS_Store
+temp
+public/stylesheets/*.css
