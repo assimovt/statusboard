@@ -90,6 +90,7 @@ body {
   
   h1 {
     @include adjust-font-size-to(25px, 2);
+    
     a {
       color: darken($wrapper-color, 5%);
     }
@@ -117,7 +118,7 @@ body {
   .header {
     background: darken($base-shade-color, 5%);
     color: $label-color;
-    padding: 5px 15px;
+    padding: 6px 12px;
     overflow: hidden;
     @include adjust-font-size-to(12px);
     text-align: left;
@@ -174,6 +175,7 @@ body {
 #service-status, #service-uptime {
   overflow: hidden;
   @include background(linear-gradient(color-stops(lighten($base-shade-color, 5%), $base-shade-color)));
+  border-top: 1px solid lighten($base-shade-color, 10%);
    
   .name {
     float: left;
@@ -195,7 +197,7 @@ body {
     
     dl {
       float: right;
-      margin-right: 25px;
+      margin-right: 12px;
       width: 63px;
       
       dt {
@@ -210,37 +212,38 @@ body {
         padding: 0 5px;
         text-align: right;
       }
-      
-      &.up {
-        dd {
-        }
-      }
-        
-      &.down {
-        dd {
-        }
-      }
     }
   }
-}
-
-#downtime-explanation {
-  @include adjust-font-size-to(14px, 0.8);
-  background: darken($down-color, 35%);
-  display: none;
-  padding: 10px;
 }
 
 #service-status {
   &.service-up {
     background: $up-color;
     @include background(linear-gradient(color-stops($up-color, $up-color, darken($up-color, 10%))));
+    border-top: 1px solid lighten($up-color, 5%);
+    
+    h1 {
+      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+    }
   }
   
   &.service-down {
     background: $down-color;
     @include background(linear-gradient(color-stops(darken($down-color, 5%), darken($down-color, 15%))));
+    border-top: 1px solid lighten($down-color, 5%);
+    
+    h1 {
+      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+    }
   }
+}
+
+
+#downtime-explanation {
+  @include adjust-font-size-to(14px, 0.8);
+  background: darken($down-color, 35%);
+  display: none;
+  padding: 10px;
 }
 
 #service-uptime {
@@ -349,7 +352,7 @@ body {
   @include inline-block-list(1px);
   
   a {
-    padding: 2px 4px;
+    padding: 3px 4px;
     
     &:hover {
       background: $accent-color;
