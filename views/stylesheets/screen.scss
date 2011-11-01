@@ -39,7 +39,7 @@ p {
 }
 
 a {
-  color: #095EAE;
+  color: $link-color;
   font-weight: bold;
   text-decoration: none;
   
@@ -89,7 +89,10 @@ body {
   overlow: hidden;
   
   h1 {
-     @include adjust-font-size-to(25px, 2);
+    @include adjust-font-size-to(25px, 2);
+    a {
+      color: darken($wrapper-color, 5%);
+    }
   }
 }
 
@@ -116,13 +119,17 @@ body {
     color: $label-color;
     padding: 5px 15px;
     overflow: hidden;
-    @include adjust-font-size-to(11px);
+    @include adjust-font-size-to(12px);
     text-align: left;
     text-transform: uppercase;
   }
   
   .body {
     margin: 0 2px;
+  }
+  
+  a {
+    color: lighten($link-color, 5%);
   }
 }
 
@@ -297,16 +304,21 @@ body {
 
 .datepicker {
   border: none;
-  background: none;
+  background: lighten($base-shade-color, 10%);
   color: $white-color;
   display: inline-block;
-  width: 70px;
+  width: 95px;
+  font-weight: bold;
+  margin-left: 5px;
+  padding: 4px;
 }
 
 .ui-datepicker-trigger{
   position: relative;
-  top: 4px;
+  top: 3px;
+  left: -18px;
   margin-right: 5px;
+  @include opacity(0.8);
 }
 
 #filter-options {
