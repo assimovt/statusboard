@@ -1,10 +1,11 @@
 #wrapper
+  %input{:type => 'hidden', :id => 'app-name', :value => APP_CONFIG["service_name"]}
   #overview.block
     .header
       #last-updated
         Last updated:
         %span.datetime -
-      #uptime-period.hidden
+      #uptime-period
         Uptime from
         %span
           %input{:type => 'text', :id => 'from', :class => 'datepicker', :name => 'from', :readonly => true}
@@ -24,13 +25,8 @@
       #service-status
         .name
           %h1= APP_CONFIG["service_name"]
-        .statuses
-          %dl.up-status
-            %dt Up
-            %dd.status 0
-          %dl.down-status
-            %dt Down
-            %dd.status 0
+      #downtime-explanation
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
       #service-uptime.hidden
         .name
           %h1= APP_CONFIG["service_name"]

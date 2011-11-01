@@ -179,9 +179,9 @@ body {
     float: left;
     
     h1 {
-      @include leader(0.8);
+      @include leader(0.5);
       @include trailer(0.5);
-      @include adjust-font-size-to(30px, 2);
+      @include adjust-font-size-to(40px, 2);
       font-weight: normal;
       margin-left: 15px;
       @include single-text-shadow(rgba(0, 0, 0, 0.8), 1px, 1px, 1px);
@@ -221,6 +221,25 @@ body {
         }
       }
     }
+  }
+}
+
+#downtime-explanation {
+  @include adjust-font-size-to(14px, 0.8);
+  background: darken($down-color, 35%);
+  display: none;
+  padding: 10px;
+}
+
+#service-status {
+  &.service-up {
+    background: $up-color;
+    @include background(linear-gradient(color-stops($up-color, $up-color, darken($up-color, 10%))));
+  }
+  
+  &.service-down {
+    background: $down-color;
+    @include background(linear-gradient(color-stops(darken($down-color, 5%), darken($down-color, 15%))));
   }
 }
 
@@ -300,6 +319,10 @@ body {
   .datetime {
     color: lighten($label-color, 20%);
   }
+}
+
+#uptime-period {
+  display: none;
 }
 
 .datepicker {

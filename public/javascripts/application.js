@@ -4,6 +4,7 @@ var StatusBoard = (function($) {
       serviceUptimeContainer = '#service-uptime',
       lastUpdateEl = '#last-updated',
       uptimePeriodEl = '#uptime-period',
+      downtimeExplanationEl = '#downtime-explanation',
       nodesContainer = '#nodes',
       statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
       uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{width}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
@@ -11,7 +12,7 @@ var StatusBoard = (function($) {
       nodesCount = 0,
       nodes = [],
       ajaxRequests = [];
-      
+            
   var stopAjaxRequests = function() {
     $.each(ajaxRequests, function(i, request){
       request.abort();
@@ -83,23 +84,26 @@ var StatusBoard = (function($) {
       stopInt();
     }
   };
-
-
   
   var getStatus = function(status) {
     return (status) ? 'up':'down'; 
   };
 
-  var updateStatuses = function(statuses) {
-    $.each(statuses, function(key, value) {
-      var status = $("#service-status ." + key+"-status").find('.status');
-      status.html(value);
-      if(value > 0) {
-        status.addClass(key);
-      } else {
-        status.removeClass(key);
-      }
-    });
+  var setStatus = function(statuses) {
+    var statusText = $('#app-name').val(),
+        statusClass = '';
+        
+    if(statuses.down === nodes.length && statuses.up === 0) {
+      statusText += ' is down';
+      statusClass = 'service-down';
+      $(downtimeExplanationEl).slideDown('fast');
+    } else {
+      statusText += ' is up';
+      statusClass = 'service-up';
+      $(downtimeExplanationEl).hide();
+    }
+    
+    $(serviceStatusContainer).addClass(statusClass).find('h1').html(statusText);
   };
   
   var countStatuses = function(statuses, status) {
@@ -197,7 +201,7 @@ var StatusBoard = (function($) {
             nodesCount++;
             createNodesList(node.uri);
           });
-          updateStatuses(statuses);
+          setStatus(statuses);
         },
         error: function() { showError("Sorry, couldn't load data."); }
       });
