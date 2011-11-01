@@ -12,7 +12,22 @@ var StatusBoard = (function($) {
       nodesCount = 0,
       nodes = [],
       ajaxRequests = [];
-            
+  
+  var stopInt = function() {
+    if(timer !== "") {
+      window.clearInterval(timer);
+      timer = "";
+    }
+  };
+  
+  var startInt = function(func) {
+    if(timer === "") {
+      timer = window.setInterval(func, refreshRate);
+    }else{
+      stopInt();
+    }
+  };
+  
   var stopAjaxRequests = function() {
     $.each(ajaxRequests, function(i, request){
       request.abort();
@@ -22,16 +37,16 @@ var StatusBoard = (function($) {
     });
   };
   
-  var dateToTimestamp = function(year,month,day,hours,minutes,seconds){
+  var convertToTimestamp = function(year,month,day,hours,minutes,seconds){
     var dateTime = new Date(Date.UTC(year,month-1,day,hours,minutes,seconds));
     return Math.round(dateTime.getTime()/1000);
   };
-  
-  var getUnixDateTime = function() {
+
+  var getCurrentTimestamp = function() {
     return Math.round((new Date()).getTime() / 1000);
   };
   
-  var getCurrentDateTime = function(format, timestamp) {
+  var getDateTime = function(format, timestamp) {
     var output = "";
     var dt = {};
     var dateTime = (timestamp === 0) ? new Date() : new Date(timestamp*1000);
@@ -67,22 +82,7 @@ var StatusBoard = (function($) {
   };
   
   var updateTime = function() {
-    $(lastUpdateEl).find('.datetime').html(getCurrentDateTime('', 0));
-  };
-  
-  var stopInt = function() {
-    if(timer !== "") {
-      window.clearInterval(timer);
-      timer = "";
-    }
-  };
-  
-  var startInt = function(func) {
-    if(timer === "") {
-      timer = window.setInterval(func, refreshRate);
-    }else{
-      stopInt();
-    }
+    $(lastUpdateEl).find('.datetime').html(getDateTime('', 0));
   };
   
   var getStatus = function(status) {
@@ -124,20 +124,22 @@ var StatusBoard = (function($) {
     $(".error-msg").hide();
   };
   
+  // Show loader when ajaxRequest is made
   var showLoader = function() {
-    // Show loader when ajaxRequest is made
     $(nodesContainer).ajaxStart(function() {
       $(nodesContainer).html('<div class="loader">Loading..</div>');
     });
   };
   
+  // Save list of existing nodes
   var createNodesList = function(node) {
     if(nodes.length < nodesCount) {
       nodes.push(node);
     }
   };
   
-   var enableDatePicker = function() {    
+  // Initialize datePicker for uptime period selection
+  var enableDatePicker = function() {    
     // Set default dates
     if($('#from').val().length === 0 && $('#to').val().length === 0) {
       var dateTime = new Date();
@@ -151,8 +153,8 @@ var StatusBoard = (function($) {
       $('#from').val(startDate);
       $('#to').val(endDate);
       
-      $('#actualdate-from').val(dateToTimestamp(year, startMonth, day, 0, 0, 0));
-      $('#actualdate-to').val(dateToTimestamp(year, endMonth, day, 0, 0, 0));
+      $('#actualdate-from').val(convertToTimestamp(year, startMonth, day, 0, 0, 0));
+      $('#actualdate-to').val(convertToTimestamp(year, endMonth, day, 0, 0, 0));
     }
     
     // Enable datepicker
@@ -180,14 +182,39 @@ var StatusBoard = (function($) {
     });
   };
   
+  var getUptimePeriodStartDate = function() {
+    var date = $('#actualdate-from').val();
+    
+    // Fix date format to Unix timestamp
+    if(date.length === 13) {
+      date = date/1000;
+    }
+    
+    return date;
+  };
+  
+  var getUptimePeriodEndDate = function() {
+    var date = $('#actualdate-to').val();
+    
+    // Fix date format to Unix timestamp
+    if(date.length === 13) {
+      date = date/1000;
+    }
+    
+    date = parseInt(date, 10) + (60*60*23 + 59*60 +59);
+    
+    return date;
+  };
+  
+  // Display service status
   var showStatus = function() {
     var output = "", statuses = {up:0, down:0};
-    $(serviceUptimeContainer).fadeOut(400, function(){
-      $(serviceStatusContainer).fadeIn();
+    
+    $(serviceUptimeContainer).hide();
+    $(serviceStatusContainer).fadeIn(400, function() {
+      $(uptimePeriodEl).hide();
+      $(lastUpdateEl).fadeIn(400);
     });
-    $(uptimePeriodEl).hide();
-    $(lastUpdateEl).find('.datetime').html();
-    $(lastUpdateEl).fadeIn();
      
     function loadData() {
       var jqxhr = $.ajax({
@@ -205,12 +232,10 @@ var StatusBoard = (function($) {
         },
         error: function() { showError("Sorry, couldn't load data."); }
       });
-      
-      //ajaxRequests.push(jqxhr);
-      
+        
       $(nodesContainer).ajaxComplete(function() {
-        updateTime();
         $(this).html(output);
+        updateTime();
         output = "";
         nodesCount = 0;
         statuses = {up:0, down:0};
@@ -218,40 +243,22 @@ var StatusBoard = (function($) {
     }
     
     loadData();
-    //startInt(loadData);
   };
   
+  // Display service uptime
   var showUptime = function() {
     var output = "", loaded = 0;
     
-    $(serviceStatusContainer).fadeOut(400, function(){
-      $(serviceUptimeContainer).fadeIn();
-      $(uptimePeriodEl).show();
-
-      $('#update-uptime').click(function() {
-        showUptime();
-        return false;
-      });
+    $(serviceStatusContainer).hide();
+    $(serviceUptimeContainer).fadeIn(400, function() {
+      $(lastUpdateEl).hide();
+      $(uptimePeriodEl).fadeIn(200);
     });
     
     enableDatePicker();
-    var startTime = $('#actualdate-from').val();
-    var endTime = $('#actualdate-to').val();
+    var startTime = getUptimePeriodStartDate();
+    var endTime = getUptimePeriodEndDate();
 
-        // Fix times
-    if(startTime.length === 13) {
-      startTime = startTime/1000;
-    }
-    
-    if(endTime.length === 13) {
-      endTime = endTime/1000;
-    }
-    
-    endTime = parseInt(endTime, 10) + (60*60*23 + 59*60 +59);
-
-    //stopInt();
-
-    $(lastUpdateEl).fadeOut();
     $.each(nodes, function(i, n) {
       var jqxhr = $.ajax({
         url: "uptime",
@@ -287,8 +294,6 @@ var StatusBoard = (function($) {
       var el = $(this);
       var activeTab = el.attr("href");
       hideError();
-      //stopAjaxRequests();
-      //stopInt();
       
       // Set active class
       $('#filter-options li').removeClass(activeClass);
@@ -297,6 +302,10 @@ var StatusBoard = (function($) {
       // Switch the view based on selection
       if(activeTab === '#uptime') {
         showUptime();
+        $('#update-uptime').click(function() {
+          showUptime();
+          return false;
+        });
       } else {
         showStatus();
       }
@@ -304,7 +313,7 @@ var StatusBoard = (function($) {
       return false;
     });
     
-    if($('#filter-options li').hasClass('active')){
+    if($('#filter-options li').hasClass(activeClass)){
       showStatus();
     }
   };
