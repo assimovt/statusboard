@@ -14,13 +14,13 @@
         %span
           %input{:type => 'text', :id => 'to', :class => 'datepicker', :name => 'to', :readonly => true}
           %input{:type => 'hidden', :id => 'actualdate-to', :class => 'datepicker-alt', :name => 'actualdate-to'}
-        %a#update-uptime(href="#status") Update
+        %a{:href => "#uptime", :class => 'nav-link', :id => '#update-uptime'} Update
 
       %ul#filter-options
         %li.active
-          %a(href="#status") Status
+          %a{:href => "#status", :class => 'nav-link'} Status
         %li
-          %a(href="#uptime") Uptime
+          %a{:href => "#uptime", :class => 'nav-link'} Uptime
     .body
       #service-status
         .name

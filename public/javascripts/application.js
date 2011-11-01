@@ -28,8 +28,12 @@ var StatusBoard = (function($) {
     }
   };
   
+  var addRequest = function(request) {
+    ajaxRequests.push(request);
+  };
+  
   var stopAjaxRequests = function() {
-    $.each(ajaxRequests, function(i, request){
+    $.each(ajaxRequests, function(i, request) {
       request.abort();
       $.grep(ajaxRequests, function(value) {
         return value !== request;
@@ -89,7 +93,7 @@ var StatusBoard = (function($) {
     return (status) ? 'up':'down'; 
   };
 
-  var setStatus = function(statuses) {
+  var showOverallStatus = function(statuses) {
     var statusText = $('#app-name').val(),
         statusClass = '';
         
@@ -117,11 +121,7 @@ var StatusBoard = (function($) {
   };
   
   var showError = function(msg) {
-    $("#wrapper").prepend('<div class="error-msg">'+msg+'</div>');
-  };
-  
-  var hideError = function() {
-    $(".error-msg").hide();
+    $(nodesContainer).html('<div class="loader">'+msg+'</div>');
   };
   
   // Show loader when ajaxRequest is made
@@ -217,28 +217,35 @@ var StatusBoard = (function($) {
     });
      
     function loadData() {
-      var jqxhr = $.ajax({
+      var request = $.ajax({
         url: "statuses.json",
         type: "GET",
-        dataType: "json",
-        success: function(data) {
-          $.each(data, function(i, node) {
-            countStatuses(statuses, node.status);
-            output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
-            nodesCount++;
-            createNodesList(node.uri);
-          });
-          setStatus(statuses);
-        },
-        error: function() { showError("Sorry, couldn't load data."); }
-      });
+        dataType: "json"});
+      
+      addRequest(request);
+      
+      request.done(function(data) {
+        $.each(data, function(i, node) {
+          countStatuses(statuses, node.status);
+          output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
+          nodesCount++;
+          createNodesList(node.uri);
+        });
         
-      $(nodesContainer).ajaxComplete(function() {
-        $(this).html(output);
+        showOverallStatus(statuses);
+        $(nodesContainer).html(output);
         updateTime();
         output = "";
         nodesCount = 0;
         statuses = {up:0, down:0};
+      });
+      
+      request.fail(function() {
+        showError("Sorry, couldn't load data."); 
+      });
+    
+      $(nodesContainer).ajaxComplete(function() {
+       
       });
     }
     
@@ -254,58 +261,64 @@ var StatusBoard = (function($) {
       $(lastUpdateEl).hide();
       $(uptimePeriodEl).fadeIn(200);
     });
-    
+      
     enableDatePicker();
     var startTime = getUptimePeriodStartDate();
     var endTime = getUptimePeriodEndDate();
 
     $.each(nodes, function(i, n) {
-      var jqxhr = $.ajax({
+      var request = $.ajax({
         url: "uptime",
         type: "GET",
-        data: {start_time: startTime, end_time: endTime, node: n},
-        success: function(data) {
-          if(data.length === 0) {
-            data = 0;
-          }
-          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data, width: Math.round(data)});
-        },
-        error: function() { showError("Sorry, couldn't load data."); }
+        data: {start_time: startTime, end_time: endTime, node: n}
+      });
+      addRequest(request);
+      
+      request.done(function(data) {
+        loaded++;
+        
+        if(data.length === 0) {
+          data = 0;
+        }
+        output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data, width: Math.round(data)});
+      
+        if(loaded === nodes.length) {
+          //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(100 + " %");        
+          $(nodesContainer).html(output);
+          output = "";
+          loaded = 0;
+        }
+      });
+      
+      request.fail(function(data) {
+        showError("Sorry, couldn't load data.");
       });
     });
     
     $(nodesContainer).ajaxComplete(function() {
-      loaded++;
       
-      if(loaded === nodes.length) {
-        //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(totalUptime/nodes.length + " %");        
-        $(this).html(output);
-        output = "";
-        loaded = 0;
-      }
     });
   };
   
-  var showStats = function() {
+  // Switch views
+  var toggleStatus = function() {
     var activeClass = 'active';
     showLoader();
     
-    $('#filter-options a').click(function(){
+    $('.nav-link').click(function(){
       var el = $(this);
-      var activeTab = el.attr("href");
-      hideError();
+      var activeLink = el.attr("href");
+      stopAjaxRequests();
       
-      // Set active class
-      $('#filter-options li').removeClass(activeClass);
-      el.parent().addClass(activeClass);
+      // Set active class for main navigation
+      if(el.parents('#filter-options').length > 0) {
+        $('#filter-options li').removeClass(activeClass);
+        el.parent().addClass(activeClass);
+      }
       
-      // Switch the view based on selection
-      if(activeTab === '#uptime') {
+      // Switch the view based on the selection
+      if(activeLink === '#uptime') {
         showUptime();
-        $('#update-uptime').click(function() {
-          showUptime();
-          return false;
-        });
       } else {
         showStatus();
       }
@@ -313,17 +326,17 @@ var StatusBoard = (function($) {
       return false;
     });
     
-    if($('#filter-options li').hasClass(activeClass)){
+    if($('#filter-options li').hasClass(activeClass)) {
       showStatus();
     }
   };
   
   return {
-    showStats: showStats
+    toggleStatus: toggleStatus
   };
 })(jQuery);
 
 
 $(document).ready(function() {
-  StatusBoard.showStats();
+  StatusBoard.toggleStatus();
 });
