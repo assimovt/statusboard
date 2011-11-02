@@ -13,6 +13,7 @@ gem 'haml'
 gem 'rest-client'
 gem 'webmock'
 gem 'compass'
+gem 'simple-rss'
 
 group :test do
   gem 'rspec', :require => 'spec'

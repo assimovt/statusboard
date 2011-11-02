@@ -64,4 +64,58 @@ class Status
     '%.2f' % ((uptimes.to_f / (uptimes + downtimes).to_f ) * 100.0)
   end
   
+  
+  # Public: Get status feeds from external service
+  #
+  # Currently supports only RSS feeds
+  # 
+  # since The Time since feed
+  #
+  # Returns hash representation of feed data
+  # Returns empty hash on errors
+  # Returns empty hash if no feeds since time given
+  def self.feeds(since = nil)
+    
+    feed = {}
+    
+    begin
+      rss       = SimpleRSS.parse open(APP_CONFIG['feeds_url'])
+      feed_item = nil
+      
+      rss.items.each do |item|
+        next if item.empty?
+        
+        author = parse_feed_item(:author, item.send(APP_CONFIG['feeds_item_author']))
+        next unless APP_CONFIG['feeds_authors_whitelist'].include?(author)
+        
+        published_at = parse_feed_item(:date,   item.send(APP_CONFIG['feeds_item_date']))
+        content      = parse_feed_item(:author, item.send(APP_CONFIG['feeds_item_author']))
+        link         = parse_feed_item(:link,   item.send(APP_CONFIG['feeds_item_link']))
+        break
+      end
+      
+      return feed if since.is_a?(Time) && published_at.to_i < since.to_i
+      
+      {:date => published_at, :author => author, :content => content, :link => link}
+    rescue
+      feed
+    end
+  end
+  
+  
+  private
+    
+    def parse_feed_item(item, value)
+      case item.to_s
+      when 'date'
+        Time.parse(value.to_s)
+      when 'author'
+        # First Last\n   email
+        value.gsub(/\n.*/, '')
+      when 'content'
+        # remove links
+        value.gsub(/<a.*<\/a>/, '')
+      end
+    end
+  
 end

@@ -72,6 +72,25 @@ describe 'status' do
     Status.uptime(Time.now, Time.now, @node).should be_nil
   end
   
+  context 'feed fetch' do
+    
+    before do
+    end
+    
+    it 'should return no feed if author is not in whitelist' do
+      pending
+    end
+    
+    it 'should return no feed that are older than given date' do
+      pending
+    end
+    
+    it 'should return valid feed hash' do
+      pending
+    end
+    
+  end
+  
   
   
 end

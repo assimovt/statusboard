@@ -9,6 +9,8 @@ require 'haml'
 require 'ostruct'
 require 'rest_client'
 require 'json'
+require 'simple-rss'
+require 'open-uri'
 
 require 'sinatra' unless defined?(Sinatra)
 
