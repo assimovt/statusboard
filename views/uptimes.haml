@@ -1,0 +1,28 @@
+#overview.block
+  .header
+    #uptime-period
+      Uptime from
+      %span
+        %input{:type => 'text', :id => 'from', :class => 'datepicker', :name => 'from', :readonly => true}
+        %input{:type => 'hidden', :id => 'actualdate-from', :class => 'datepicker-alt', :name => 'actualdate-from'}
+      to
+      %span
+        %input{:type => 'text', :id => 'to', :class => 'datepicker', :name => 'to', :readonly => true}
+        %input{:type => 'hidden', :id => 'actualdate-to', :class => 'datepicker-alt', :name => 'actualdate-to'}
+      %a{:href => "#uptime", :class => 'nav-link', :id => '#update-uptime'} Update
+
+    = haml :nav
+  .body
+    #service-uptime
+      .name
+        %h1= APP_CONFIG["service_name"]
+      .statuses
+        %dl.total-uptime
+          %dt Total uptime
+          %dd.status 0
+#nodes.block
+  .header
+    %span.name NODES
+    %span.node-status UPTIME
+  .body
+    #nodes

@@ -339,5 +339,5 @@ var StatusBoard = (function($) {
 
 
 $(document).ready(function() {
-  StatusBoard.toggleStatus();
+  //StatusBoard.toggleStatus();
 });

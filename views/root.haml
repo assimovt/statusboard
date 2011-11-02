@@ -1,42 +1,18 @@
-#wrapper
-  %input{:type => 'hidden', :id => 'app-name', :value => APP_CONFIG["service_name"]}
-  #overview.block
-    .header
-      #last-updated
-        Last updated:
-        %span.datetime -
-      #uptime-period
-        Uptime from
-        %span
-          %input{:type => 'text', :id => 'from', :class => 'datepicker', :name => 'from', :readonly => true}
-          %input{:type => 'hidden', :id => 'actualdate-from', :class => 'datepicker-alt', :name => 'actualdate-from'}
-        to
-        %span
-          %input{:type => 'text', :id => 'to', :class => 'datepicker', :name => 'to', :readonly => true}
-          %input{:type => 'hidden', :id => 'actualdate-to', :class => 'datepicker-alt', :name => 'actualdate-to'}
-        %a{:href => "#uptime", :class => 'nav-link', :id => '#update-uptime'} Update
-
-      %ul#filter-options
-        %li.active
-          %a{:href => "#status", :class => 'nav-link'} Status
-        %li
-          %a{:href => "#uptime", :class => 'nav-link'} Uptime
-    .body
-      #service-status
-        .name
-          %h1= APP_CONFIG["service_name"]
-      #downtime-explanation
-        = APP_CONFIG["default_downtime_message"]
-      #service-uptime.hidden
-        .name
-          %h1= APP_CONFIG["service_name"]
-        .statuses
-          %dl.total-uptime
-            %dt Total uptime
-            %dd.status 0
-  #nodes.block
-    .header
-      %span.name NODES
-      %span.node-status STATUS
-    .body
-      #nodes
+#overview.block
+  .header
+    #last-updated
+      Last updated:
+      %span.datetime -
+    = haml :nav
+  .body
+    #service-status
+      .name
+        %h1= APP_CONFIG["service_name"]
+    -#downtime-explanation
+      = APP_CONFIG["default_downtime_message"]
+#nodes.block
+  .header
+    %span.name NODES
+    %span.node-status STATUS
+  .body
+    #nodes

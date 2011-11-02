@@ -28,11 +28,20 @@ end
 
 helpers do
   # add your helpers here
+  
 end
 
 # root page
 get '/' do
   haml :root
+end
+
+get '/uptimes' do
+  haml :uptimes
+end
+
+get '/log' do
+  haml :log
 end
 
 get '/statuses.json' do

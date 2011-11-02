@@ -15,6 +15,9 @@
     #header
       %h1#logo
         %a{:href => '/'}= APP_CONFIG['title']
-    #body= yield
+    #body
+      #wrapper
+        %input{:type => 'hidden', :id => 'app-name', :value => APP_CONFIG["service_name"]}
+        = yield
     #footer
       %p#legal= "&mdash; &copy; #{Time.now.strftime('%Y')}"
