@@ -257,6 +257,7 @@ var StatusBoard = (function($) {
     var output = "", loaded = 0;
     
     $(serviceStatusContainer).hide();
+    $(downtimeExplanationEl).hide();
     $(serviceUptimeContainer).fadeIn(400, function() {
       $(lastUpdateEl).hide();
       $(uptimePeriodEl).fadeIn(200);

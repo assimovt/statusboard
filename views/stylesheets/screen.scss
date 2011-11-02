@@ -71,7 +71,7 @@ body {
 }
 
 .container {
-  @include column(18, true);
+  @include column(20, true);
   float: none;
   display: block;
   margin: 0 auto;
