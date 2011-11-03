@@ -2,6 +2,7 @@ var StatusBoard = StatusBoard || {};
 
 StatusBoard.Uptime = {
   nodesContainer: '#nodes',
+  serviceUptimeContainer: '#service-uptime',
   uptimeTmpl: '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{width}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
 
   init: function() {
@@ -89,6 +90,7 @@ StatusBoard.Uptime = {
         output = "",
         nodesLoaded = 0,
         total = "",
+        wholeNodeUri = "whole", 
         startTime = self.getUptimePeriodStartDate(),
         endTime = self.getUptimePeriodEndDate();
     
@@ -99,29 +101,32 @@ StatusBoard.Uptime = {
         dataType: "json"});
       
     nodesRequest.done(function(nodes) {
+      // Add "whole" node for retrieving total uptime
+      nodes.push({"status":"", "timestamp":"", "uri":wholeNodeUri, "host":""});
+      
       // Fetch uptime for each node
-      //$.each(nodes, function(i, node) {
-      $.each(nodes.concat("whole"), function(i, node) {
+      $.each(nodes, function(i, node) {
+        var nodeUri = node.uri;
         var uptimeRequest = $.ajax({
           url: "uptime",
           type: "GET",
-          data: {start_time: startTime, end_time: endTime, node: node.uri}
+          data: {start_time: startTime, end_time: endTime, node: nodeUri}
         });
         
         uptimeRequest.done(function(uptime) {
           nodesLoaded++;
 
-          if(uptime.length === 0) uptime = 0;
+          if(uptime.length === 0) { uptime = 0; }
           
-          if (n === "whole") {
-            total = Math.round(data);
+          if (nodeUri === wholeNodeUri) {
+            total = uptime;
           } else {
-            output += Mustache.to_html(self.uptimeTmpl, {uri: node.uri, uptime: uptime, width: Math.round(uptime)});
+            output += Mustache.to_html(self.uptimeTmpl, {uri: nodeUri, uptime: uptime, width: Math.round(uptime)});
           }
           
           // Check that uptimes for all nodes have been loaded
-          if(nodesLoaded === nodes.length){
-            $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + " %");
+          if(nodesLoaded === nodes.length) {
+            $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + " %");
             $(self.nodesContainer).html(output);
             self.enablePeriodUpdate();
           }
