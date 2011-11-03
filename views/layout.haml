@@ -16,7 +16,7 @@
         %input{:type => 'hidden', :id => 'app-name', :value => APP_CONFIG["service_name"]}
         = yield
     #footer
-      %p#legal= "&mdash; &copy; #{Time.now.strftime('%Y')}"
+      %p#legal= "&copy; #{Time.now.strftime('%Y')} #{APP_CONFIG["service_name"]}"
   %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-1.6.4.min.js"}
   %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-ui-1.8.16.custom.min.js"}
   %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-qtip.min.js"}
