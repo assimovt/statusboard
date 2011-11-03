@@ -75,6 +75,7 @@ body {
   float: none;
   display: block;
   margin: 0 auto;
+  position: relative;
 }
 
 #wrapper {
@@ -359,4 +360,12 @@ body {
       background: $light-gray-color;
     }
   } 
+}
+
+#loader {
+  display: none;
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  z-index: 99999;
 }

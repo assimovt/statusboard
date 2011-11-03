@@ -54,8 +54,25 @@ var Utils = {
   
   // Show loader when ajaxRequest is made
   showLoader: function() {
-    $(self.nodesContainer).ajaxStart(function() {
-      $(nodesContainer).html('<div class="loader">Loading..</div>');
+    var spinner = null;
+    var opts = {
+      lines: 10, // The number of lines to draw
+      length: 4, // The length of each line
+      width: 3, // The line thickness
+      radius: 6, // The radius of the inner circle
+      color: '#CCC', // #rgb or #rrggbb
+      speed: 1, // Rounds per second
+      trail: 60, // Afterglow percentage
+      shadow: false // Whether to render a shadow
+    };
+
+    // Show loader when ajaxRequest is made
+    $('#loader').ajaxStart(function() {
+      spinner = new Spinner(opts).spin(this);
+      $(this).fadeIn(300);
+    }).ajaxStop(function() {
+      spinner.stop();
+      $(this).fadeOut(300);
     });
   },
   
@@ -65,6 +82,8 @@ var Utils = {
 };
 
 $(document).ready(function() {
+  Utils.showLoader();
+  
   if ($('#service-status').length) {
     Utils.setNavActiveClass('#status-link');
     StatusBoard.Status.init();
