@@ -77,27 +77,29 @@ StatusBoard.Uptime = {
   
   enablePeriodUpdate: function() {
     var self = this;
-    $('#update-uptime').click(function(){
+    $('#update-uptime').fadeIn('fast').one('click', function(){
       self.showUptime();
-      $(this).unbind('click');
+      $(this).fadeOut('fast');
+      return false;
     });
   },
 
   showUptime: function() {
     var self = this,
         output = "",
-        loaded = 0,
-        nodes = '',
+        nodesLoaded = 0,
         startTime = self.getUptimePeriodStartDate(),
         endTime = self.getUptimePeriodEndDate();
     
+    // Fetch all nodes
     var nodesRequest = $.ajax({
         url: "statuses.json",
         type: "GET",
         dataType: "json"});
       
-    nodesRequest.done(function(data) {
-      $.each(data, function(i, node) {
+    nodesRequest.done(function(nodes) {
+      // Fetch uptime for each node
+      $.each(nodes, function(i, node) {
         var uptimeRequest = $.ajax({
           url: "uptime",
           type: "GET",
@@ -105,14 +107,17 @@ StatusBoard.Uptime = {
         });
         
         uptimeRequest.done(function(uptime) {
-          if(uptime.length === 0) {
-            uptime = 0;
-          }
+          nodesLoaded++;
+
+          if(uptime.length === 0) uptime = 0;
           output += Mustache.to_html(self.uptimeTmpl, {uri: node.uri, uptime: uptime, width: Math.round(uptime)});
-          $(self.nodesContainer).html(output);
-          self.enablePeriodUpdate();
-        
-          //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(100 + " %");              
+          
+          // Check that uptimes for all nodes have been loaded
+          if(nodesLoaded === nodes.length){
+            //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(100 + " %");
+            $(self.nodesContainer).html(output);
+            self.enablePeriodUpdate();
+          }
         });
         
         uptimeRequest.fail(function(data) {

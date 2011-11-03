@@ -49,13 +49,13 @@ var Utils = {
     if(msg === "") {
       msg = "Sorry, couldn't load data. Please try again later.";
     }
-    $(nodesContainer).html('<div class="loader">'+msg+'</div>');
+    $(self.nodesContainer).html('<div class="loader">'+msg+'</div>');
   },
   
   // Show loader when ajaxRequest is made
   showLoader: function() {
-    $(nodesContainer).ajaxStart(function() {
-     // $(nodesContainer).html('<div class="loader">Loading..</div>');
+    $(self.nodesContainer).ajaxStart(function() {
+      $(nodesContainer).html('<div class="loader">Loading..</div>');
     });
   },
   
