@@ -9,7 +9,7 @@
       %span
         %input{:type => 'text', :id => 'to', :class => 'datepicker', :name => 'to', :readonly => true}
         %input{:type => 'hidden', :id => 'actualdate-to', :class => 'datepicker-alt', :name => 'actualdate-to'}
-      %a{:href => "#uptime", :class => 'nav-link', :id => '#update-uptime'} Update
+      %a{:href => "uptimes", :id => 'update-uptime'} Update
 
     = haml :nav
   .body
@@ -23,6 +23,6 @@
 #nodes.block
   .header
     %span.name NODES
-    %span.node-status UPTIME
+    %span.node-uptime.right UPTIME
   .body
     #nodes

@@ -46,6 +46,9 @@ var Utils = {
   },
   
   showError: function(msg) {
+    if(msg === "") {
+      msg = "Sorry, couldn't load data. Please try again later.";
+    }
     $(nodesContainer).html('<div class="loader">'+msg+'</div>');
   },
   
@@ -62,4 +65,7 @@ $(document).ready(function() {
     StatusBoard.Status.init();
   }
   
+  if ($('#service-uptime').length) {
+    StatusBoard.Uptime.init();
+  }
 });
