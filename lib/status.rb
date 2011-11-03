@@ -26,6 +26,24 @@ class Status
     result.saved?
   end
   
+  # Public: Updates all nodes with a status and updates status of the system as whole
+  def self.update_all
+    all_results = []
+    Node.all.each do |uri|
+      begin
+        response = RestClient.get uri
+        status = response.code == 200
+      rescue => ex
+        status = false
+      end
+      result = self.create(:updated_at => Time.now, :value => status, :uri => uri)
+      all_results << status
+    end
+    
+    status_as_whole = all_results.count(true) > 0
+    self.create(:updated_at => Time.now, :value => status_as_whole, :uri => "whole")
+  end
+  
   
   # Public: Get the current status of all nodes
   #

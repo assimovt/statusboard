@@ -254,7 +254,7 @@ var StatusBoard = (function($) {
   
   // Display service uptime
   var showUptime = function() {
-    var output = "", loaded = 0;
+    var output = "", total = "", loaded = 0;
     
     $(serviceStatusContainer).hide();
     $(downtimeExplanationEl).hide();
@@ -266,8 +266,8 @@ var StatusBoard = (function($) {
     enableDatePicker();
     var startTime = getUptimePeriodStartDate();
     var endTime = getUptimePeriodEndDate();
-
-    $.each(nodes, function(i, n) {
+    
+    $.each(nodes.concat("whole"), function(i, n) {
       var request = $.ajax({
         url: "uptime",
         type: "GET",
@@ -281,10 +281,14 @@ var StatusBoard = (function($) {
         if(data.length === 0) {
           data = 0;
         }
-        output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data, width: Math.round(data)});
+        if (n == "whole") {
+          total = Math.round(data);
+        } else {
+          output += Mustache.to_html(uptimeTmpl, {uri: n, uptime: data, width: Math.round(data)});
+        }
       
-        if(loaded === nodes.length) {
-          //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(100 + " %");        
+        if(loaded === nodes.length + 1) {
+          $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + " %");
           $(nodesContainer).html(output);
           output = "";
           loaded = 0;
