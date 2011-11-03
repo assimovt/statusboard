@@ -239,9 +239,10 @@ body {
   }
 }
 
-
-#downtime-explanation {
+#downtime-message {
+  display: none;
   @include adjust-font-size-to(14px, 0.8);
+  border-top: 2px solid darken($down-color, 38%);
   background: darken($down-color, 35%);
   display: none;
   padding: 10px;

@@ -3,13 +3,14 @@ var StatusBoard = StatusBoard || {};
 StatusBoard.Status = {
   serviceStatusContainer: '#service-status',
   lastUpdateEl: '#last-updated',
-  downtimeExplanationEl: '#downtime-explanation',
+  downtimeMessageEl: '#downtime-message',
   nodesContainer: '#nodes',
   nodeStatusTmpl: '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
   serviceUpText: ' is up',
   serviceDownText: ' is down',
   failedRequests: 0,
   updateInterval: 6000,
+  showDowntimeMessage: true,
   
   init: function() {
     this.getStatusData();
@@ -30,11 +31,17 @@ StatusBoard.Status = {
     if(nodesDown > 0 && nodesUp === 0) {
       statusText += this.serviceDownText;
       statusClass = 'service-down';
-      $(this.downtimeExplanationEl).slideDown('fast');
+      
+      // Show downtime message
+      if(this.showDowntimeMessage) {
+        if($(this.downtimeMessageEl+":hidden")) {
+          $(this.downtimeMessageEl).slideDown('fast');
+        }
+      }
     } else {
       statusText += this.serviceUpText;
       statusClass = 'service-up';
-      $(this.downtimeExplanationEl).hide();
+      $(this.downtimeMessageEl+":visible").hide();
     }
     
     $(this.serviceStatusContainer).removeClass().addClass(statusClass).find('h1').html(statusText);
