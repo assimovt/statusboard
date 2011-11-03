@@ -57,15 +57,25 @@ var Utils = {
     $(nodesContainer).ajaxStart(function() {
      // $(nodesContainer).html('<div class="loader">Loading..</div>');
     });
+  },
+  
+  setNavActiveClass: function(el) {
+    $(el).parent().addClass('active');
   }
 };
 
 $(document).ready(function() {
   if ($('#service-status').length) {
+    Utils.setNavActiveClass('#status-link');
     StatusBoard.Status.init();
   }
   
   if ($('#service-uptime').length) {
+    Utils.setNavActiveClass('#uptime-link');
     StatusBoard.Uptime.init();
+  }
+  
+  if ($('#service-log').length) {
+    Utils.setNavActiveClass('#log-link');
   }
 });
