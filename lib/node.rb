@@ -9,6 +9,7 @@ class Node
   def initialize(uri)
     @uri = uri
     @host = uri.match(/^https?:\/\/(.+)\//)[1] rescue false
+    @host = true if @uri == "whole"
     
     raise ArgumentError, "URI is invalid" unless @host
   end

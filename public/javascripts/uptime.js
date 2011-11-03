@@ -88,6 +88,7 @@ StatusBoard.Uptime = {
     var self = this,
         output = "",
         nodesLoaded = 0,
+        total = "",
         startTime = self.getUptimePeriodStartDate(),
         endTime = self.getUptimePeriodEndDate();
     
@@ -99,7 +100,8 @@ StatusBoard.Uptime = {
       
     nodesRequest.done(function(nodes) {
       // Fetch uptime for each node
-      $.each(nodes, function(i, node) {
+      //$.each(nodes, function(i, node) {
+      $.each(nodes.concat("whole"), function(i, node) {
         var uptimeRequest = $.ajax({
           url: "uptime",
           type: "GET",
@@ -110,11 +112,16 @@ StatusBoard.Uptime = {
           nodesLoaded++;
 
           if(uptime.length === 0) uptime = 0;
-          output += Mustache.to_html(self.uptimeTmpl, {uri: node.uri, uptime: uptime, width: Math.round(uptime)});
+          
+          if (n === "whole") {
+            total = Math.round(data);
+          } else {
+            output += Mustache.to_html(self.uptimeTmpl, {uri: node.uri, uptime: uptime, width: Math.round(uptime)});
+          }
           
           // Check that uptimes for all nodes have been loaded
           if(nodesLoaded === nodes.length){
-            //$(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(100 + " %");
+            $(serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + " %");
             $(self.nodesContainer).html(output);
             self.enablePeriodUpdate();
           }
