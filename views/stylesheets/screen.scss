@@ -118,7 +118,7 @@ body {
   .header {
     background: darken($base-shade-color, 5%);
     color: $label-color;
-    padding: 6px 12px;
+    padding: 6px 16px;
     overflow: hidden;
     @include adjust-font-size-to(12px);
     text-align: left;
@@ -254,7 +254,7 @@ body {
   }
 }
 
-#nodes {
+#nodes-list {
   .node {
     overflow: hidden;
     padding: 10px 15px;
@@ -264,10 +264,6 @@ body {
     @include background(linear-gradient(color-stops(lighten($base-shade-color, 5%), $base-shade-color)));
     @include single-text-shadow(rgba(0, 0, 0, 0.8), 1px, 1px, 1px);
     line-height: 1.6em;
-  }
-  
-  .name {
-    float: left;
   }
   
   .node-status {
@@ -322,10 +318,6 @@ body {
   .datetime {
     color: lighten($label-color, 20%);
   }
-}
-
-#uptime-period {
-  display: none;
 }
 
 .datepicker {
