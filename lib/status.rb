@@ -65,7 +65,7 @@ class Status
   end
   
   
-  # Public: Get status feeds from external service
+  # Public: Get latest status feed from external service
   #
   # Currently supports only RSS feeds
   # 
@@ -74,9 +74,10 @@ class Status
   # Returns hash representation of feed data
   # Returns empty hash on errors
   # Returns empty hash if no feeds since time given
-  def self.feeds(since = nil)
+  def self.feed(since = nil)
     
-    feed = {}
+    feed   = {}
+    author = nil
     
     begin
       rss       = SimpleRSS.parse open(APP_CONFIG['feeds_url'])
@@ -84,28 +85,34 @@ class Status
       
       rss.items.each do |item|
         next if item.empty?
-        
-        author = parse_feed_item(:author, item.send(APP_CONFIG['feeds_item_author']))
+        author = parse_feed_item(:author, item.send(feed_whitelist))
         next unless APP_CONFIG['feeds_authors_whitelist'].include?(author)
-        
-        published_at = parse_feed_item(:date,   item.send(APP_CONFIG['feeds_item_date']))
-        content      = parse_feed_item(:author, item.send(APP_CONFIG['feeds_item_author']))
-        link         = parse_feed_item(:link,   item.send(APP_CONFIG['feeds_item_link']))
+        feed_item    = item
         break
       end
+
+      return feed unless feed_item
+
+      published_at = parse_feed_item(:date,    feed_item.send(APP_CONFIG['feeds_item_date']))
+      content      = parse_feed_item(:content, feed_item.send(APP_CONFIG['feeds_item_content']))
+      link         = feed_item.send(APP_CONFIG['feeds_item_link'])
       
       return feed if since.is_a?(Time) && published_at.to_i < since.to_i
-      
+
       {:date => published_at, :author => author, :content => content, :link => link}
-    rescue
+    rescue Exception => ex
       feed
     end
   end
   
   
+  def self.feed_whitelist
+    APP_CONFIG['feeds_item_author']
+  end
+  
   private
-    
-    def parse_feed_item(item, value)
+  
+    def self.parse_feed_item(item, value)
       case item.to_s
       when 'date'
         Time.parse(value.to_s)

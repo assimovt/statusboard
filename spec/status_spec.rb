@@ -1,6 +1,14 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
+module StatusHelper
+  def mock_feed
+    File.read(File.join(File.dirname(__FILE__), 'status.feed'))
+  end
+end
+
 describe 'status' do
+  
+  include StatusHelper
   
   before do
     @status = Status.new(:updated_at => Time.now, :value => true, :uri => 'http://example.com/status')
@@ -75,18 +83,25 @@ describe 'status' do
   context 'feed fetch' do
     
     before do
+      stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed, :status => 200)
     end
     
     it 'should return no feed if author is not in whitelist' do
-      pending
+      Status.stub!(:feed_whitelist).and_return(['Ignored user'])
+      Status.feed.should be_empty
     end
     
     it 'should return no feed that are older than given date' do
-      pending
+      Status.feed(Time.now).should be_empty
     end
     
     it 'should return valid feed hash' do
-      pending
+      feed = Status.feed
+      feed.should_not be_empty
+      feed.has_key?(:date).should be_true
+      feed[:author].should match(/Quentin/)
+      feed[:content].should match(/Status content/)
+      feed[:link].should match(/example.com/)
     end
     
   end
