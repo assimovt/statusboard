@@ -1,40 +1,18 @@
-#wrapper
-  #overview.block
-    .header
-      #last-updated
-        Last updated:
-        %span.datetime -
-      %ul#filter-options
-        %li#last-24.active
-          %a(href="#") Last 24h
-        %li#last-month
-          %a(href="#") Last month
-        %li#custom-period
-          %a(href="#") Custom period
-    .body
-      #service-status
-        .name
-          %h1= APP_CONFIG["service_name"]
-        .statuses
-          %dl.up-status
-            %dt Up
-            %dd.status 0
-          %dl.down-status
-            %dt Down
-            %dd.status 0
-  #nodes.block
-    .header
-      %span.name NODES
-      %span.node-status STATUS
-    .body
-      #nodes
-        .node
-          %span.name
-            saeappc.nokia.com
-          %span.node-status
-            %span.status.up
-        .node
-          %span.name
-            saeappc.nokia.com
-          %span.node-status
-            %span.status.down
+#overview.block
+  .header
+    #last-updated
+      Last updated:
+      %span.datetime -
+    = haml :nav
+  .body
+    #service-status
+      .name
+        %h1= APP_CONFIG["service_name"]
+    #downtime-message
+      = APP_CONFIG["default_downtime_message"]
+#nodes-list.block
+  .header
+    %span.name NODES
+    %span.right STATUS
+  .body
+    #nodes

@@ -32,10 +32,10 @@ end
 namespace :status do
   desc 'Update status for the nodes'
   task :update => :environment do
-    Node.all.each { |uri| Node.new(uri).update }
+    Status.update_all
   end
 end
 
 task :environment do
-  require File.join(File.dirname(__FILE__), 'environment')
+  require File.join(File.dirname(__FILE__), 'config/environment.rb')
 end
