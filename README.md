@@ -16,35 +16,35 @@ Application currently supports:
 
 ## Quick start
 
-1. Clone the repository:
+* Clone the repository:
 
 `git clone git://github.com/assimovt/statusboard.git`
 
-2. Copy and configure `status.yml` following comments in the file:
+* Copy and configure `status.yml` following comments in the file:
 
 `cp config/status.yml.sample config/status.yml`
 
-3. Configure cron job to fetch the statuses:
+* Configure cron job to fetch the statuses:
 
 `# fetch status of the nodes every 5 minutes`
 
 `*/5  * * * * cd PATH_TO_THE_APP && RACK_ENV=production rake status:update`
 
-4. Export `production` environment variable:
+* Export `production` environment variable:
 
 `export RACK_ENV=production`
 
-5. Run bundle and database migrations:
+* Run bundle and database migrations:
 
 `bundle install`
 
 `rake db:migrate`
 
-6. Start the app:
+* Start the app:
 
 `bundle exec rackup`
 
-7. The app should be running on port 9292 at configured host (status.yml).
+* The app should be running on port 9292 at configured host (status.yml).
 
 
 ## License
