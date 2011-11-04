@@ -1,4 +1,4 @@
-Statusboard
+Statusboard [![Build Status](https://secure.travis-ci.org/assimovt/statusboard.png)](http://travis-ci.org/assimovt/statusboard)
 ===========
 
 Statusboard is a simple Sinatra/SQLite powered application to track availability of remote nodes.
