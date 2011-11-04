@@ -40,7 +40,6 @@ p {
 
 a {
   color: $link-color;
-  font-weight: bold;
   text-decoration: none;
   
   &:hover {
@@ -246,6 +245,29 @@ body {
   background: darken($down-color, 35%);
   display: none;
   padding: 10px;
+  
+  p {
+    margin: 3px 0;
+  }
+  
+  strong {
+    font-weight: normal;
+  }
+  
+  ul, ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
+  a {
+    color: lighten($link-color, 25%);
+  }
 }
 
 #service-uptime {
@@ -327,13 +349,13 @@ body {
   background: lighten($base-shade-color, 10%);
   color: $white-color;
   display: inline-block;
-  width: 95px;
+  width: 85px;
   font-weight: bold;
   margin-left: 5px;
   padding: 4px;
 }
 
-.ui-datepicker-trigger{
+.ui-datepicker-trigger {
   position: relative;
   top: 3px;
   left: -18px;
@@ -347,6 +369,7 @@ body {
   
   a {
     padding: 3px 4px;
+    font-weight: bold;
     
     &:hover {
       background: $accent-color;
