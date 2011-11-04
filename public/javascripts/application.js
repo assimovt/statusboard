@@ -45,11 +45,19 @@ var Utils = {
     return output;
   },
   
-  showError: function(msg) {
-    if(msg === "") {
-      msg = "Sorry, couldn't load data. Please try again later.";
+  showData: function(data, wrapData) {
+    if(data === undefined) {
+      data = "Sorry, couldn't load data. Please try again later.";
+      if(wrapData === undefined) {
+        wrapData = true;
+      }
     }
-    $(self.nodesContainer).html('<div class="loader">'+msg+'</div>');
+
+    if(wrapData) {
+      data = '<div class="loader">' + data + '</div>';
+    }
+    
+    $(this.nodesContainer).html(data);
   },
   
   // Show loader when ajaxRequest is made

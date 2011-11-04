@@ -1,7 +1,6 @@
 var StatusBoard = StatusBoard || {};
 
 StatusBoard.Uptime = {
-  nodesContainer: '#nodes',
   serviceUptimeContainer: '#service-uptime',
   uptimeTmpl: '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{width}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
 
@@ -127,19 +126,19 @@ StatusBoard.Uptime = {
           // Check that uptimes for all nodes have been loaded
           if(nodesLoaded === nodes.length) {
             $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + " %");
-            $(self.nodesContainer).html(output);
+            Utils.showData(output);
             self.enablePeriodUpdate();
           }
         });
         
         uptimeRequest.fail(function(data) {
-          Utils.showError();
+          Utils.showData();
         });
       });
     });
     
     nodesRequest.fail(function(data) {
-      Utils.showError();
+      Utils.showData();
     });
   }
 };

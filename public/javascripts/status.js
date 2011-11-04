@@ -4,7 +4,6 @@ StatusBoard.Status = {
   serviceStatusContainer: '#service-status',
   lastUpdateEl: '#last-updated',
   downtimeMessageEl: '#downtime-message',
-  nodesContainer: '#nodes',
   nodeStatusTmpl: '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
   serviceUpText: ' is up',
   serviceDownText: ' is down',
@@ -59,32 +58,35 @@ StatusBoard.Status = {
         dataType: "json"});
       
     request.done(function(data) {
-      $.each(data, function(i, node) {
-        if(node.status) {
-          nodesUp++;
-        } else {
-          nodesDown++;
-        }
-        output += Mustache.to_html(self.nodeStatusTmpl, {uri: node.uri, status: self.getStatusClass(node.status)});
-      });
-
-      self.setGlobalStatus(nodesUp, nodesDown);
-      $(self.nodesContainer).html(output);
-      self.updateTime();
-            
+      if(data.length > 0) {
+        $.each(data, function(i, node) {
+          if(node.status) {
+            nodesUp++;
+          } else {
+            nodesDown++;
+          }
+          output += Mustache.to_html(self.nodeStatusTmpl, {uri: node.uri, status: self.getStatusClass(node.status)});
+        });
+  
+        self.setGlobalStatus(nodesUp, nodesDown);
+        Utils.showData(output);
+      } else {
+        Utils.showData("No data available at the moment", true);
+      }
       // Recurse on success
       setTimeout(function() { self.init(); }, self.updateInterval);
     });
     
     request.fail(function() {
-      //this.errorHandler();
-      $.proxy(this.errorHandler, this);
-      Utils.showError("Sorry, couldn't load data."); 
+      self.errorHandler();
+      Utils.showData(); 
     });
+    
+    self.updateTime();
   },
  
    // Handle errors
-  errorHandler: function(){
+  errorHandler: function() {
     if(++this.failedRequests < 10){
       // Give the server some breathing room by increasing the updateInterval
       this.updateInterval += 1000;
