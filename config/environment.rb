@@ -11,6 +11,7 @@ require 'rest_client'
 require 'json'
 require 'simple-rss'
 require 'open-uri'
+require 'mail'
 
 require 'sinatra' unless defined?(Sinatra)
 

@@ -13,6 +13,10 @@ common: &common
   # considered for status message
   feeds_authors_whitelist:
     - Quentin
+    
+  # Email to send notification when all nodes are down
+  to_email: PUT AN EMAIL TO NOTIFY
+  from_email: PUT FROM EMAIL
 
 production:
   <<: *common

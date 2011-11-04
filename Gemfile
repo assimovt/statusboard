@@ -14,6 +14,7 @@ gem 'rest-client'
 gem 'webmock'
 gem 'compass'
 gem 'simple-rss'
+gem 'mail'
 
 group :test do
   gem 'rspec', :require => 'spec'

@@ -42,6 +42,7 @@ class Status
     
     status_as_whole = all_results.count(true) > 0
     self.create(:updated_at => Time.now, :value => status_as_whole, :uri => "whole")
+    send_panic_email! if status_as_whole
   end
   
   
@@ -141,6 +142,26 @@ class Status
         # remove links
         value.gsub(/<a.*<\/a>/, '')
       end
+    end
+    
+    
+    def self.send_panic_email!
+      mail = Mail.new do
+        from    APP_CONFIG['from_email']
+        to      APP_CONFIG['to_email']
+        subject "PANIC! #{APP_CONFIG['service_name']} is down."
+        body    <<-EOF
+Important!
+
+All nodes are down, stop whatever you are doing now and fix it.
+
+#{APP_CONFIG['service_name']} URL: #{APP_CONFIG['host']}
+
+EOF
+      end
+      
+      mail.delivery_method :sendmail
+      mail.deliver
     end
   
 end
