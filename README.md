@@ -26,7 +26,7 @@ Application currently supports:
 
 * Configure cron job to fetch the statuses:
 
-```# fetch status of the nodes every 5 minutes`
+```# fetch status of the nodes every 5 minutes
 */5  * * * * cd PATH_TO_THE_APP && RACK_ENV=production rake status:update
 ```
 
