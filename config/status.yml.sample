@@ -2,22 +2,25 @@ common: &common
   title: Status board
   service_name: MONITORED APP NAME
   default_downtime_message: Unfortunately something went wrong. We have been notified of the issue and working on resolving it.
-
-development: &non_production_settings
-  <<: *common
-  host: http://localhost:4567
-  nodes:
-    - http://host1.example.com/status
-    - http://host2.example.com/status
-
-test:
-  <<: *non_production_settings
-  <<: *common
   
+  # RSS feed fields used to build up a status message
+  feeds_item_date: published
+  feeds_item_content: content
+  feeds_item_author: author
+  feeds_item_link: link
+  
+  # Whitelist of authors whose messages are 
+  # considered for status message
+  feeds_authors_whitelist:
+    - Quentin
+
 production:
   <<: *common
   
   host: Status board production host name
+  
+  # URL of RSS feeds that used for status message
+  feeds_url: https://blog.example.com/rss.atom
   
   # List HTTP or HTTPs nodes monitored
   # See Development settings for example
@@ -25,3 +28,19 @@ production:
     - 
     -
 
+
+
+
+### Development and testing settings
+
+development: &non_production_settings
+  <<: *common
+  host: http://localhost:4567
+  feeds_url: https://blog.example.com/rss.atom
+  nodes:
+    - http://host1.example.com/status
+    - http://host2.example.com/status
+
+test:
+  <<: *non_production_settings
+  <<: *common
