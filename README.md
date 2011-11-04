@@ -33,9 +33,10 @@ Application currently supports:
 
 `export RACK_ENV=production`
 
-5. Run database migrations:
+5. Run bundle and database migrations:
 
-`rake db:migrate`
+    bundle install
+    rake db:migrate
 
 6. Start the app:
 
