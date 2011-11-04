@@ -1,0 +1,2 @@
+before_script:
+  - cp config/status.yml.sample config/status.yml
