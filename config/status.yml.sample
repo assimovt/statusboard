@@ -1,6 +1,7 @@
 common: &common
   title: Status board
   service_name: MONITORED APP NAME
+  default_downtime_message: Unfortunately something went wrong. We have been notified of the issue and working on resolving it.
 
 development: &non_production_settings
   <<: *common

@@ -2,18 +2,26 @@
 %head
   %meta{ :charset => "utf-8" }/
   %meta{'http-equiv'=>"Content-Language", :content=>"en-us"}/
-  %title= @title || APP_CONFIG['title']
+  %title= @title || APP_CONFIG["service_name"] + " " + APP_CONFIG['title']
   %link{:href=>"/stylesheets/screen.css", :media=>"screen", :rel=>"stylesheet", :type=>"text/css"}
-  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-1.6.4.min.js"}
-  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-qtip.min.js"}
   %script{:type => "text/javascript", :src => "/javascripts/lib/modernizr.custom.js"}
-  %script{:type => "text/javascript", :src => "/javascripts/lib/mustache.js"}
-  %script{:type => "text/javascript", :src => "/javascripts/application.js"}
 %body
-  .container.showgrid
+  .container
+    #loader
     #header
       %h1#logo
         %a{:href => '/'}= APP_CONFIG['title']
-    #body= yield
+    #body
+      #wrapper
+        %input{:type => 'hidden', :id => 'app-name', :value => APP_CONFIG["service_name"]}
+        = yield
     #footer
-      %p#legal= "&mdash; &copy; #{Time.now.strftime('%Y')}"
+      %p#legal= "&copy; #{Time.now.strftime('%Y')} #{APP_CONFIG["service_name"]}"
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-1.6.4.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-ui-1.8.16.custom.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/jquery-qtip.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/spin.min.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/lib/mustache.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/status.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/uptime.js"}
+  %script{:type => "text/javascript", :src => "/javascripts/application.js"}

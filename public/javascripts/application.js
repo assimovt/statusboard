@@ -1,134 +1,108 @@
-StatusBoard = (function($) {
-  var refreshRate = 2000,
-      serviceStatusContainer = '#service-status',
-      lastUpdateEl = '#last-updated',
-      nodesContainer = '#nodes',
-      statusTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
-      uptimeTmpl = '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{uptime}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
-      timer = '';
-  
-  var updateTime = function() {
-    var currentTime = new Date();
-    $('.datetime').html(currentTime.getDate() + "." + (currentTime.getMonth()+1) + "."+ currentTime.getFullYear() + " " + currentTime.getHours() + ":" + currentTime.getMinutes() + ":" + currentTime.getSeconds());  
-  };
-  
-  var startInt = function(func) {
-    if(timer === "") {
-      timer = window.setInterval(func, refreshRate);
-    }else{
-      stopInt();
-    }
-  };
+var Utils = {
+  nodesContainer: '#nodes',
 
-  var stopInt = function(func) {
-    if(timer !== "") {
-      window.clearInterval(timer);
-      timer = "";
-    }
-  };
-  
-  var getStatus = function(status) {
-    return (status) ? 'up':'down'; 
-  };
+  convertToTimestamp: function(year,month,day,hours,minutes,seconds){
+    var dateTime = new Date(Date.UTC(year,month-1,day,hours,minutes,seconds));
+    return Math.round(dateTime.getTime()/1000);
+  },
 
-  var updateStatuses = function(statuses) {
-    $.each(statuses, function(key, value){
-      var status = $("#service-status ." + key+"-status").find('.status');
-      status.html(value);
-      if(value > 0) {
-        status.addClass(key);
-      } else {
-        status.removeClass(key);
-      }
-    });
-  };
+  getCurrentTimestamp: function() {
+    return Math.round((new Date()).getTime() / 1000);
+  },
   
-  var showStatus = function() {
-    var output = "", statuses = {up:0, down:0};
-    // FIXME: Use path to get JSON
-    var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":false, "uri":"server 3"}, {"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
-
-    $(serviceStatusContainer).slideDown();
-    $(lastUpdateEl).fadeIn();
-    //$.getJSON(url+query,function(json){});
-    
-    $.each(obj, function(i, node) {
-      output += Mustache.to_html(statusTmpl, {uri: node.uri, status: getStatus(node.status)});
-      if(node.status) {
-        statuses.up += 1;
-      } else {
-        statuses.down += 1;
-      }
-    });
-
-    updateStatuses(statuses);
-    $(nodesContainer).html(output);
-    updateTime();
-  };
-  
-  var showUptime = function(startTime, endTime) {
+  getDateTime: function(format, timestamp) {
     var output = "";
-        
-    stopInt();
-    $(serviceStatusContainer).slideUp();
-    $(lastUpdateEl).fadeOut();
-    // FIXME: Use path to get JSON 
-    var obj = jQuery.parseJSON('[{"timestamp":"12:00", "status":true, "uri":"server 1"}, {"timestamp":"13:00", "status":true, "uri":"server 2"}]');
+    var dt = {};
+    var dateTime = (timestamp === 0) ? new Date() : new Date(timestamp*1000);
     
-    //startTime = (startTime.length > 0) ? "" : "";
-    //endTime = (endTime.length > 0) ? "" : "";
+    dt.day = dateTime.getDate();
+    dt.month = dateTime.getMonth() + 1;
+    dt.year = dateTime.getFullYear();
+    dt.hours = dateTime.getHours();
+    dt.minutes = dateTime.getMinutes();
+    dt.seconds = dateTime.getSeconds();
     
-    $.each(obj, function(i, node) {
-      // FIXME: Request node uptime
-      output += Mustache.to_html(uptimeTmpl, {uri: node.uri, uptime: 3});
-    });
-    
-    $(nodesContainer).html(output);
-  };
-  
-  var showStats = function() {
-    var activeClass = 'active';
-    
-    $('#filter-options a').click(function(){
-      var el = $(this).parent();
-      var elId = el.attr('id');
-      stopInt();
-      
-      // Set active class
-      $('#filter-options li').removeClass(activeClass);
-      el.addClass(activeClass);
-      
-      // Update view based on selection
-      switch(elId) {
-        case 'last-month':
-          showUptime();
-        break;
-        
-        case 'custom-period':
-          // get time
-          var startTime = "";
-          var endTime = "";
-          showUptime(startTime, endTime);
-        break;
-        
-        default:
-          startInt(showStatus);
+    // Prepend the zero when needed
+    $.each(dt, function(i, d) {
+      if(d < 10) {
+        dt[i] = '0' + d;
       }
-      
-      return false;
     });
-    
-    if($('#filter-options li').hasClass('active')){
-      startInt(showStatus);
-    }
-  };
-  
-  return {
-    showStats: showStats
-  };
-})(jQuery);
 
+    switch(format) {
+      case 'y-m-d h:m:s':
+        output = dt.year + "-" + dt.month + "-" + dt.day + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
+      break;
+      
+      case 'd.m.y':
+        output = dt.day + "." + dt.month + "." + dt.year;
+      break;
+      
+      default:
+        output = dt.day + "." + dt.month + "." + dt.year + " " + dt.hours + ":" + dt.minutes + ":" + dt.seconds;
+    }
+    
+    return output;
+  },
+  
+  showData: function(data, wrapData) {
+    if(data === undefined) {
+      data = "Sorry, couldn't load data. Please try again later.";
+      if(wrapData === undefined) {
+        wrapData = true;
+      }
+    }
+
+    if(wrapData) {
+      data = '<div class="loader">' + data + '</div>';
+    }
+    
+    $(this.nodesContainer).html(data);
+  },
+  
+  // Show loader when ajaxRequest is made
+  showLoader: function() {
+    var spinner = null;
+    var opts = {
+      lines: 10, // The number of lines to draw
+      length: 4, // The length of each line
+      width: 3, // The line thickness
+      radius: 6, // The radius of the inner circle
+      color: '#CCC', // #rgb or #rrggbb
+      speed: 1, // Rounds per second
+      trail: 60, // Afterglow percentage
+      shadow: false // Whether to render a shadow
+    };
+
+    // Show loader when ajaxRequest is made
+    $('#loader').ajaxStart(function() {
+      spinner = new Spinner(opts).spin(this);
+      $(this).fadeIn(300);
+    }).ajaxStop(function() {
+      spinner.stop();
+      $(this).fadeOut(300);
+    });
+  },
+  
+  setNavActiveClass: function(el) {
+    $(el).parent().addClass('active');
+  }
+};
 
 $(document).ready(function() {
-  StatusBoard.showStats();
+  Utils.showLoader();
+  
+  if ($('#service-status').length) {
+    Utils.setNavActiveClass('#status-link');
+    StatusBoard.Status.init();
+  }
+  
+  if ($('#service-uptime').length) {
+    Utils.setNavActiveClass('#uptime-link');
+    StatusBoard.Uptime.init();
+  }
+  
+  if ($('#service-log').length) {
+    Utils.setNavActiveClass('#log-link');
+  }
 });

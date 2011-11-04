@@ -1,4 +1,5 @@
 @import "base";
+@import "jquery.ui";
 
 /* Typography */
 
@@ -21,15 +22,15 @@ h3 {
 }
 
 h4 {
-  font-size: 1.3em;
-}
-
-h5 {
   font-size: 1.2em;
 }
 
+h5 {
+  font-size: 1em;
+}
+
 h6 {
-  font-size: 1.1em;
+  font-size: 0.9em;
 }
 
 p {
@@ -38,8 +39,7 @@ p {
 }
 
 a {
-  color: #095EAE;
-  font-weight: bold;
+  color: $link-color;
   text-decoration: none;
   
   &:hover {
@@ -70,10 +70,11 @@ body {
 }
 
 .container {
-  @include column(18, true);
+  @include column(20, true);
   float: none;
   display: block;
   margin: 0 auto;
+  position: relative;
 }
 
 #wrapper {
@@ -88,7 +89,11 @@ body {
   overlow: hidden;
   
   h1 {
-     @include adjust-font-size-to(25px, 2);
+    @include adjust-font-size-to(25px, 2);
+    
+    a {
+      color: darken($wrapper-color, 5%);
+    }
   }
 }
 
@@ -113,15 +118,19 @@ body {
   .header {
     background: darken($base-shade-color, 5%);
     color: $label-color;
-    padding: 5px 15px;
+    padding: 6px 16px;
     overflow: hidden;
-    @include adjust-font-size-to(11px);
+    @include adjust-font-size-to(12px);
     text-align: left;
     text-transform: uppercase;
   }
   
   .body {
     margin: 0 2px;
+  }
+  
+  a {
+    color: lighten($link-color, 5%);
   }
 }
 
@@ -132,31 +141,49 @@ body {
   border: 2px solid $accent-color;
   @include single-box-shadow(rgba(0, 0, 0, 0.4), 1px, 1px, 2px);
   @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 0);
+  color: darken($accent-color, 10%);
   
   &.up {
     background: $up-color;
     @include background(linear-gradient(color-stops($up-color, darken($up-color, 10%))));
     //@include single-box-shadow(rgba(75, 153, 0, 0.4), 0, 0, 10px);
+    color: $white-color;
   }
     
   &.down {
     background: $down-color;
     @include background(linear-gradient(color-stops($down-color, darken($down-color, 10%))));
     //@include single-box-shadow(rgba(247, 97, 97, 0.4), 0, 0, 10px);
+    color: $white-color;
+  }
+  
+  &.uptime {
+    color: $white-color;
   }
 }
 
-#service-status {
+.error-msg {
+  margin: 10px 20px 0 20px;
+  display: block;
+}
+
+.loader {
+  padding: 40px;
+  text-align: center;
+}
+
+#service-status, #service-uptime {
   overflow: hidden;
   @include background(linear-gradient(color-stops(lighten($base-shade-color, 5%), $base-shade-color)));
+  border-top: 1px solid lighten($base-shade-color, 10%);
    
   .name {
     float: left;
     
     h1 {
-      @include leader(0.8);
+      @include leader(0.5);
       @include trailer(0.5);
-      @include adjust-font-size-to(30px, 2);
+      @include adjust-font-size-to(40px, 2);
       font-weight: normal;
       margin-left: 15px;
       @include single-text-shadow(rgba(0, 0, 0, 0.8), 1px, 1px, 1px);
@@ -170,7 +197,7 @@ body {
     
     dl {
       float: right;
-      margin-right: 25px;
+      margin-right: 12px;
       width: 63px;
       
       dt {
@@ -185,21 +212,73 @@ body {
         padding: 0 5px;
         text-align: right;
       }
-      
-      &.up {
-        dd {
-        }
-      }
-        
-      &.down {
-        dd {
-        }
-      }
     }
   }
 }
 
-#nodes {
+#service-status {
+  &.service-up {
+    background: $up-color;
+    @include background(linear-gradient(color-stops($up-color, $up-color, darken($up-color, 10%))));
+    border-top: 1px solid lighten($up-color, 5%);
+    
+    h1 {
+      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+    }
+  }
+  
+  &.service-down {
+    background: $down-color;
+    @include background(linear-gradient(color-stops(darken($down-color, 5%), darken($down-color, 15%))));
+    border-top: 1px solid lighten($down-color, 5%);
+    
+    h1 {
+      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+    }
+  }
+}
+
+#downtime-message {
+  display: none;
+  @include adjust-font-size-to(14px, 0.8);
+  border-top: 2px solid darken($down-color, 38%);
+  background: darken($down-color, 35%);
+  display: none;
+  padding: 10px 15px;
+  
+  p {
+    margin: 3px 0;
+  }
+  
+  strong {
+    font-weight: normal;
+  }
+  
+  ul, ol {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    
+    li {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  
+  a {
+    color: lighten($link-color, 25%);
+  }
+}
+
+#service-uptime {
+  .statuses {
+    dl {
+      width: 160px;
+    }
+  }
+}
+
+#nodes-list {
   .node {
     overflow: hidden;
     padding: 10px 15px;
@@ -209,10 +288,6 @@ body {
     @include background(linear-gradient(color-stops(lighten($base-shade-color, 5%), $base-shade-color)));
     @include single-text-shadow(rgba(0, 0, 0, 0.8), 1px, 1px, 1px);
     line-height: 1.6em;
-  }
-  
-  .name {
-    float: left;
   }
   
   .node-status {
@@ -261,7 +336,7 @@ body {
   }
 }
 
-#last-updated {
+#last-updated, #uptime-period {
   float: left;
   
   .datetime {
@@ -269,12 +344,32 @@ body {
   }
 }
 
-#filter-options {
+.datepicker {
+  border: none;
+  background: lighten($base-shade-color, 10%);
+  color: $white-color;
+  display: inline-block;
+  width: 85px;
+  font-weight: bold;
+  margin-left: 5px;
+  padding: 4px;
+}
+
+.ui-datepicker-trigger {
+  position: relative;
+  top: 3px;
+  left: -18px;
+  margin-right: 5px;
+  @include opacity(0.8);
+}
+
+#nav {
   float: right;
   @include inline-block-list(1px);
   
   a {
-    padding: 2px 4px;
+    padding: 3px 4px;
+    font-weight: bold;
     
     &:hover {
       background: $accent-color;
@@ -289,4 +384,42 @@ body {
       background: $light-gray-color;
     }
   } 
+}
+
+#loader {
+  display: none;
+  position: absolute;
+  top: 25px;
+  right: 10px;
+  z-index: 99999;
+}
+
+#service-log {
+  color: $dark-gray-color;
+  
+  article {
+    border-top: 2px dotted $base-shade-color;
+    border-bottom: 2px solid $wrapper-color;
+    background: $white-color;
+    display: block;
+    padding: 6px 10px;
+    
+    h4 {
+      margin: 10px 0;
+    }
+    
+    p {
+      margin: 10px 0 0 0;
+      @include adjust-font-size-to(14px, 0.8);
+    }
+    
+    time {
+      color: darken($light-gray-color, 10%);
+      @include adjust-font-size-to(13px, 1.4);
+    }
+  }
+  
+  article + article {
+    margin-top: 2px;
+  }
 }
