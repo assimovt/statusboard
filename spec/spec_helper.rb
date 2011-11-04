@@ -21,3 +21,10 @@ RSpec.configure do |config|
   # reset database before each example is run
   config.before(:each) { DataMapper.auto_migrate! }
 end
+
+
+module StatusHelper
+  def mock_feed
+    File.read(File.join(File.dirname(__FILE__), 'status.feed'))
+  end
+end

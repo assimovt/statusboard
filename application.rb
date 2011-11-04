@@ -56,3 +56,9 @@ get '/uptime' do
   
   Status.uptime(@start_time, @end_time, @node)
 end
+
+get '/feed.json' do
+  content_type :json
+  @since      = Time.at(params[:since].to_i) rescue nil
+  Status.feed(@since).to_json
+end

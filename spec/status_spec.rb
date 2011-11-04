@@ -1,11 +1,5 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
-module StatusHelper
-  def mock_feed
-    File.read(File.join(File.dirname(__FILE__), 'status.feed'))
-  end
-end
-
 describe 'status' do
   
   include StatusHelper

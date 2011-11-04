@@ -1,7 +1,9 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
 
 describe 'main application' do
+  
   include Rack::Test::Methods
+  include StatusHelper
 
   def app
     Sinatra::Application.new
@@ -25,12 +27,23 @@ describe 'main application' do
     json.first['status'].should be_true
   end
 
-  it 'should have more specs' do
+  it 'should get uptime' do
     get '/uptime', :node => 'http://example.com/status', :start_time => 0, :end_time => Time.now.to_i
     last_response.should be_ok
     last_response.body.should == "100.00"
   end
   
+  it 'should get the status feed in json' do
+    stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed, :status => 200)
+    get '/feed.json'
+    last_response.should be_ok
+    json = JSON.parse(last_response.body)
+    json.should_not be_nil
+    json['author'].should_not be_nil
+    json['link'].should_not be_nil
+    json['content'].should_not be_nil
+    json['date'].should_not be_nil
+  end
   
   
 end
