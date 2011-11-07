@@ -3,11 +3,18 @@ common: &common
   service_name: MONITORED APP NAME
   default_downtime_message: Unfortunately something went wrong. We have been notified of the issue and working on resolving it.
   
-  # RSS feed fields used to build up a status message
+  # RSS feed fields used to build up a status message.
+  # These fields must be part of the feed in the root of an <item> tag.
   feeds_item_date: published
   feeds_item_content: content
   feeds_item_author: author
   feeds_item_link: link
+  
+  # RSS feed "hash tags" used to denote how and when the message is shown
+  # If #up tag found first in the content, message is not going to be visible
+  # If #down tag found, the first message with such hash tag will be visible
+  feeds_up_tag: '#up'
+  feeds_down_tag: '#down'
   
   # Whitelist of authors whose messages are 
   # considered for status message

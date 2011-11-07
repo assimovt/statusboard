@@ -74,10 +74,11 @@ describe 'status' do
     Status.uptime(Time.now, Time.now, @node).should be_nil
   end
   
-  context 'feed fetch' do
+  context 'fetch feed with down' do
     
     before do
-      stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed, :status => 200)
+      stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed(:down), :status => 200)
+      @feed = Status.feed
     end
     
     it 'should return no feed if author is not in whitelist' do
@@ -85,17 +86,32 @@ describe 'status' do
       Status.feed.should be_empty
     end
     
-    it 'should return no feed that are older than given date' do
-      Status.feed(Time.now).should be_empty
+    it 'should return valid feed hash' do
+      @feed.should_not be_empty
     end
     
-    it 'should return valid feed hash' do
-      feed = Status.feed
-      feed.should_not be_empty
-      feed.has_key?(:date).should be_true
-      feed[:author].should match(/Quentin/)
-      feed[:content].should match(/Status content/)
-      feed[:link].should match(/example.com/)
+    it 'should have valid data in feed' do
+      @feed.has_key?(:date).should be_true
+      @feed[:author].should match(/Quentin/)
+      @feed[:content].should match(/Status content/)
+      @feed[:link].should match(/example.com/)
+    end
+    
+    it 'should not have down tag in feed' do
+      @feed[:content].should_not match(/#{APP_CONFIG['feeds_down_tag']}/)
+    end
+    
+  end
+  
+  
+  context 'fetch feed with up' do
+    
+    before do
+      stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed(:up), :status => 200)
+    end
+    
+    it 'should return no feed if latest feed has up tag' do
+      Status.feed.should be_empty
     end
     
   end

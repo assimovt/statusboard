@@ -34,7 +34,7 @@ describe 'main application' do
   end
   
   it 'should get the status feed in json' do
-    stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed, :status => 200)
+    stub_request(:get, /.*example.com\/rss.atom/).to_return(:body => mock_feed(:down), :status => 200)
     get '/feed.json'
     last_response.should be_ok
     json = JSON.parse(last_response.body)
