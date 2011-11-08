@@ -84,6 +84,13 @@ var Utils = {
     });
   },
   
+  openExternalLinks: function() {
+     $("body").delegate('a[rel="external"]', "click", function() {
+      window.open($(this).attr('href'));
+      return false;
+    });
+  },
+  
   setNavActiveClass: function(el) {
     $(el).parent().addClass('active');
   }
@@ -91,6 +98,7 @@ var Utils = {
 
 $(document).ready(function() {
   Utils.showLoader();
+  Utils.openExternalLinks();
   
   if ($('#service-status').length) {
     Utils.setNavActiveClass('#status-link');

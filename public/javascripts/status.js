@@ -12,6 +12,7 @@ StatusBoard.Status = {
   
   init: function() {
     this.getStatusData();
+    this.toggleStatusMessage();
   },
   
   updateTime: function() {
@@ -32,7 +33,6 @@ StatusBoard.Status = {
     } else {
       statusText += this.serviceUpText;
       statusClass = 'service-up';
-      $(this.downtimeMessageEl+":visible").hide();
     }
     
     $(this.serviceStatusContainer).removeClass().addClass(statusClass).find('h1').html(statusText);
@@ -41,10 +41,6 @@ StatusBoard.Status = {
   // Remove unnecessary html from from the feed and build the message
   cleanupAndShowFeedContent: function(data) {
     var self = this;
-    
-    $(self.downtimeMessageEl).html(data.content);
-    $(self.downtimeMessageEl).html($(self.downtimeMessageEl+' h5').prevAll('p:not(.last_child)'));
-    $(self.downtimeMessageEl + 'p').each(function(i,p){ $(self.downtimeMessageEl).append(p); });
     
     if(data.author !== undefined) {
       output = ' <strong>' + data.author + '</strong>';
@@ -55,10 +51,10 @@ StatusBoard.Status = {
     }
     
     if(data.link !== undefined) {
-      output += '. <a href="'+data.link+'">View message</a>';
+      output += '. <a href="'+data.link+'" rel="external">View message</a>';
     }
     
-    $(self.downtimeMessageEl).append('<p class="meta"><span>Published by:</span> ' + output + '</p>');
+    $(this.downtimeMessageEl).html(data.content + '<p class="meta"><span>Published by:</span> ' + output + '</p>');
   },
   
   // Fetch status message from the RSS feed
@@ -74,7 +70,7 @@ StatusBoard.Status = {
     feedRequest.done(function(data) {
       if(data.content !== undefined) {
         self.cleanupAndShowFeedContent(data);
-  
+        
         if($(self.downtimeMessageEl+":hidden")) {
           $(self.downtimeMessageEl).slideDown('fast');
         }
@@ -90,7 +86,8 @@ StatusBoard.Status = {
         output = "",
         nodesUp = 0,
         nodesDown = 0,
-        status = 0;
+        status = 0,
+        feedRequest = '';
         
     var request = $.ajax({
         url: "statuses.json",
@@ -113,10 +110,7 @@ StatusBoard.Status = {
       } else {
         Utils.showData("No data available at the moment", true);
       }
-      
-      // Display status message from the external feed
-      self.toggleStatusMessage();
-      
+            
       // Recurse on success
       setTimeout(function() { self.init(); }, self.updateInterval);
     });
