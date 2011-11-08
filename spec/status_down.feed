@@ -24,7 +24,7 @@
     <link rel="alternate" type="text/html" href="https://blog.example.com/messages/78815"/>
     <title type="html">Test</title>
     <content type="xhtml">
-      Status content. I failed and know why. #down
+      Status content. <div>Some div</div>I failed and know why. #down
     </content>
     <author>
       <name>Quentin</name>

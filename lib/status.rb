@@ -107,10 +107,11 @@ class Status
         next if item.empty?
         
         # skip authors that are not in whitelist
-        author = parse_feed_item(:author, item.send(feed_whitelist))
-        next unless APP_CONFIG['feeds_authors_whitelist'].include?(author)
+        author = parse_feed_item(:author, item.send(APP_CONFIG['feeds_item_author']))
+        next unless feed_whitelist.include?(author)
         
         content = parse_feed_item(:content, item.send(APP_CONFIG['feeds_item_content']))
+        
         next if content.empty?
         
         # Find up or down tag and:
@@ -126,7 +127,7 @@ class Status
       end
 
       return feed unless feed_item
-
+      
       published_at = parse_feed_item(:date,    feed_item.send(APP_CONFIG['feeds_item_date']))
       link         = feed_item.send(APP_CONFIG['feeds_item_link'])
 
@@ -138,7 +139,7 @@ class Status
   
   
   def self.feed_whitelist
-    APP_CONFIG['feeds_item_author']
+    APP_CONFIG['feeds_authors_whitelist']
   end
   
   private
@@ -151,8 +152,10 @@ class Status
         # First Last\n   email
         value.gsub(/\n.*/, '')
       when 'content'
-        # remove links
-        value.gsub(/<a.*<\/a>/, '')
+        # Format content if provided
+        APP_CONFIG['feeds_item_content_regex'] ? 
+          value.gsub(Regexp.new(APP_CONFIG['feeds_item_content_regex']), '') : 
+          value
       end
     end
     

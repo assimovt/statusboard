@@ -50,6 +50,10 @@ common: &common
   feeds_item_author: author
   feeds_item_link: link
   
+  # Optional Regular expression to clean up content: html tags, etc.
+  # Example below, strips all html tags and new line characters.
+  feeds_item_content_regex: '(<\/?[^>]*>|\\n)'
+  
   # RSS feed "hash tags" used to denote how and when the message is shown.
   # If #up tag found first in the content, message is not going to be visible.
   # If #down tag found, the first message with such hash tag will be visible.
@@ -92,6 +96,7 @@ development: &non_production_settings
   <<: *common
   host: http://localhost:4567
   feeds_url: https://blog.example.com/rss.atom
+  feeds_item_content_regex: '(<\/?[^>]*>|\\n)'
   nodes:
     - http://host1.example.com/status
     - http://host2.example.com/status

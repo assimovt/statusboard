@@ -97,6 +97,12 @@ describe 'status' do
       @feed[:link].should match(/example.com/)
     end
     
+    it 'should not have html tags or new line characters in content' do
+      @feed[:content].should_not match(/<div>/)
+      @feed[:content].should_not match(/<\/div>/)
+      @feed[:content].should_not match(/\\n/)
+    end
+    
     it 'should not have down tag in feed' do
       @feed[:content].should_not match(/#{APP_CONFIG['feeds_down_tag']}/)
     end
