@@ -31,7 +31,8 @@ class Status
     all_results = []
     Node.all.each do |uri|
       begin
-        response = RestClient.get uri
+        resource = RestClient::Resource.new(uri, :timeout => APP_CONFIG['node_timeout'] || 600)
+        response = resource.get
         status = response.code == 200
       rescue => ex
         status = false
