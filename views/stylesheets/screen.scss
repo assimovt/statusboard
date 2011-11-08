@@ -409,33 +409,3 @@ body {
   right: 10px;
   z-index: 99999;
 }
-
-#service-log {
-  color: $dark-gray-color;
-  
-  article {
-    border-top: 2px dotted $base-shade-color;
-    border-bottom: 2px solid $wrapper-color;
-    background: $white-color;
-    display: block;
-    padding: 6px 10px;
-    
-    h4 {
-      margin: 10px 0;
-    }
-    
-    p {
-      margin: 10px 0 0 0;
-      @include adjust-font-size-to(14px, 0.8);
-    }
-    
-    time {
-      color: darken($light-gray-color, 10%);
-      @include adjust-font-size-to(13px, 1.4);
-    }
-  }
-  
-  article + article {
-    margin-top: 2px;
-  }
-}

@@ -109,8 +109,4 @@ $(document).ready(function() {
     Utils.setNavActiveClass('#uptime-link');
     StatusBoard.Uptime.init();
   }
-  
-  if ($('#service-log').length) {
-    Utils.setNavActiveClass('#log-link');
-  }
 });
