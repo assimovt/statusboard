@@ -10,7 +10,7 @@ common: &common
   
   # Service may consist of several nodes.
   # It is the name of your application shown to users on Statusboard.
-  service_name: <Monitored application name>
+  service_name: Monitored application name
   
   
   
@@ -18,21 +18,21 @@ common: &common
   # You Must define monitoring settings here.
   
   # Host name of the production server running Statusboard.
-  host: <Status board production host name>
+  host: Status board production host name
   
   # List of monitored nodes/servers.
   # Each node must be a URL with http or https protocol
   # and respond with 200/4xx (up/down) HTTP status.
   nodes:
-    - <Node 1 URL>
-    - <Node 2 URL>
+    - Node 1 URL
+    - Node 2 URL
     
   # Default timeout in seconds to get node status
   node_timeout: 600
     
   # Email to send notifications when entire service is down.
-  to_email: <To email address>
-  from_email: <From email address>
+  to_email: To email address
+  from_email: From email address
   
   
   
@@ -41,7 +41,7 @@ common: &common
   # Use it to inform about scheduled maintenance breaks, or explain why the service is down.
 
   # URL of RSS feeds
-  feed_url: <URL of RSS feeds>
+  feed_url: URL of RSS feeds
 
   # RSS feed fields used to build up a status message.
   # These fields must be part of the feed in the root of an <item> tag.
@@ -55,7 +55,7 @@ common: &common
   feed_item_content_regex: '(<\/?[^>]*>|\\n)'
   
   # Date format of published date
-  feed_item_date_format: '%d.%m.%Y %H:%M:%s'
+  feed_item_date_format: '%d.%m.%Y %H:%M:%S'
   
   # RSS feed "hash tags" used to denote how and when the message is shown.
   # If #up tag found first in the content, message is not going to be visible.
@@ -65,8 +65,8 @@ common: &common
   
   # Whitelist of authors whose messages are considered for status message.
   feed_authors_whitelist:
-    - <Feed author name 1>
-    - <Feed author name 2>
+    - Feed author name 1
+    - Feed author name 2
   
   # When there is a downtime and RSS status message can not be fetched,
   # this message is going to be shown to the users.
