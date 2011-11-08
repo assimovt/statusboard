@@ -1,7 +1,6 @@
 common: &common
   title: Status board
   service_name: MONITORED APP NAME
-  default_downtime_message: Unfortunately something went wrong. We have been notified of the issue and working on resolving it.
   
   # RSS feed fields used to build up a status message
   feeds_item_date: published
