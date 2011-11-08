@@ -223,7 +223,7 @@ body {
     border-top: 1px solid lighten($up-color, 5%);
     
     h1 {
-      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+      @include single-text-shadow(rgba(0, 0, 0, 0.5), -1px, -1px, 1px);
     }
   }
   
@@ -233,7 +233,7 @@ body {
     border-top: 1px solid lighten($down-color, 5%);
     
     h1 {
-      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+      @include single-text-shadow(rgba(0, 0, 0, 0.5), -1px, -1px, 1px);
     }
   }
 }
@@ -282,14 +282,6 @@ body {
     
     &span {
       color: $label-color;
-    }
-  }
-}
-
-#service-uptime {
-  .statuses {
-    dl {
-      width: 160px;
     }
   }
 }
@@ -349,6 +341,20 @@ body {
     height: 22px;
     display: block;
     margin-left: 2px;
+  }
+}
+
+#service-uptime {
+  .statuses {
+    dl {
+      width: 160px;
+    }
+  }
+  
+  .total-uptime {
+    dd {
+      @include single-text-shadow(rgba(0, 0, 0, 0.8), 1px, 1px, 1px);
+    }
   }
 }
 
