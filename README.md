@@ -14,6 +14,20 @@ Application currently supports:
 **Note:** Downtime means when all nodes are down at a given time.
 
 
+## Screenshots
+
+### When the service is up
+
+http://github.com/assimovt/statusboard/blob/master/public/images/status_board_status_up.png
+
+### When the service is down
+
+http://github.com/assimovt/statusboard/blob/master/public/images/status_board_status_down.png
+
+### Service uptime
+
+http://github.com/assimovt/statusboard/blob/master/public/images/status_board_uptime.png
+
 ## Quick start
 
 * Clone the repository:
