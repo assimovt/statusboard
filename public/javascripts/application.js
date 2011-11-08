@@ -84,6 +84,13 @@ var Utils = {
     });
   },
   
+  openExternalLinks: function() {
+     $("body").delegate('a[rel="external"]', "click", function() {
+      window.open($(this).attr('href'));
+      return false;
+    });
+  },
+  
   setNavActiveClass: function(el) {
     $(el).parent().addClass('active');
   }
@@ -91,6 +98,7 @@ var Utils = {
 
 $(document).ready(function() {
   Utils.showLoader();
+  Utils.openExternalLinks();
   
   if ($('#service-status').length) {
     Utils.setNavActiveClass('#status-link');
@@ -100,9 +108,5 @@ $(document).ready(function() {
   if ($('#service-uptime').length) {
     Utils.setNavActiveClass('#uptime-link');
     StatusBoard.Uptime.init();
-  }
-  
-  if ($('#service-log').length) {
-    Utils.setNavActiveClass('#log-link');
   }
 });

@@ -40,10 +40,6 @@ get '/uptimes' do
   haml :uptimes
 end
 
-get '/log' do
-  haml :log
-end
-
 get '/statuses.json' do
   content_type :json
   Status.current.to_json
