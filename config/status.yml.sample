@@ -103,11 +103,11 @@ development: &non_production_settings
   nodes:
     - http://host1.example.com/status
     - http://host2.example.com/status
-
-test:
-  <<: *non_production_settings
-  <<: *common
   feed_authors_whitelist:
     - Quentin
   feed_up_tag: '#up'
   feed_down_tag: '#down'
+
+test:
+  <<: *non_production_settings
+  <<: *common
