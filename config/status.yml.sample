@@ -27,6 +27,9 @@ common: &common
     - <Node 1 URL>
     - <Node 2 URL>
     
+  # Default timeout in seconds to get node status
+  node_timeout: 600
+    
   # Email to send notifications when entire service is down.
   to_email: <To email address>
   from_email: <From email address>
@@ -38,23 +41,30 @@ common: &common
   # Use it to inform about scheduled maintenance breaks, or explain why the service is down.
 
   # URL of RSS feeds
-  feeds_url: <URL of RSS feeds>
+  feed_url: <URL of RSS feeds>
 
   # RSS feed fields used to build up a status message.
   # These fields must be part of the feed in the root of an <item> tag.
-  feeds_item_date: published
-  feeds_item_content: content
-  feeds_item_author: author
-  feeds_item_link: link
+  feed_item_date: published
+  feed_item_content: content
+  feed_item_author: author
+  feed_item_link: link
+  
+  # Optional Regular expression to clean up content: html tags, etc.
+  # Example below, strips all html tags and new line characters.
+  feed_item_content_regex: '(<\/?[^>]*>|\\n)'
+  
+  # Date format of published date
+  feed_item_date_format: '%d.%m.%Y %H:%M:%s'
   
   # RSS feed "hash tags" used to denote how and when the message is shown.
   # If #up tag found first in the content, message is not going to be visible.
   # If #down tag found, the first message with such hash tag will be visible.
-  feeds_up_tag: '#up'
-  feeds_down_tag: '#down'
+  feed_up_tag: '#up'
+  feed_down_tag: '#down'
   
   # Whitelist of authors whose messages are considered for status message.
-  feeds_authors_whitelist:
+  feed_authors_whitelist:
     - <Feed author name 1>
     - <Feed author name 2>
   
@@ -88,7 +98,8 @@ production:
 development: &non_production_settings
   <<: *common
   host: http://localhost:4567
-  feeds_url: https://blog.example.com/rss.atom
+  feed_url: https://blog.example.com/rss.atom
+  feed_item_content_regex: '(<\/?[^>]*>|\\n)'
   nodes:
     - http://host1.example.com/status
     - http://host2.example.com/status
@@ -96,7 +107,7 @@ development: &non_production_settings
 test:
   <<: *non_production_settings
   <<: *common
-  feeds_authors_whitelist:
+  feed_authors_whitelist:
     - Quentin
-  feeds_up_tag: '#up'
-  feeds_down_tag: '#down'
+  feed_up_tag: '#up'
+  feed_down_tag: '#down'

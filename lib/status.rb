@@ -31,7 +31,8 @@ class Status
     all_results = []
     Node.all.each do |uri|
       begin
-        response = RestClient.get uri
+        resource = RestClient::Resource.new(uri, :timeout => APP_CONFIG['node_timeout'] || 600)
+        response = resource.get
         status = response.code == 200
       rescue => ex
         status = false
@@ -42,7 +43,7 @@ class Status
     
     status_as_whole = all_results.count(true) > 0
     self.create(:updated_at => Time.now, :value => status_as_whole, :uri => "whole")
-    send_panic_email! if status_as_whole
+    send_panic_email! unless status_as_whole
   end
   
   
@@ -99,25 +100,26 @@ class Status
     content = nil
     
     begin
-      rss       = SimpleRSS.parse open(APP_CONFIG['feeds_url'])
+      rss       = SimpleRSS.parse open(APP_CONFIG['feed_url'])
       feed_item = nil
       
       rss.items.each do |item|
         next if item.empty?
         
         # skip authors that are not in whitelist
-        author = parse_feed_item(:author, item.send(feed_whitelist))
-        next unless APP_CONFIG['feeds_authors_whitelist'].include?(author)
+        author = parse_feed_item(:author, item.send(APP_CONFIG['feed_item_author']))
+        next unless feed_whitelist.include?(author)
         
-        content = parse_feed_item(:content, item.send(APP_CONFIG['feeds_item_content']))
+        content = parse_feed_item(:content, item.send(APP_CONFIG['feed_item_content']))
+        
         next if content.empty?
         
         # Find up or down tag and:
         #   return empty feed if up tag found first
-        return feed if content.match(feed_tag_regex(APP_CONFIG['feeds_up_tag']))
+        return feed if content.match(feed_tag_regex(APP_CONFIG['feed_up_tag']))
         #   save feed and break if down tag found
-        if content.match(feed_tag_regex(APP_CONFIG['feeds_down_tag']))
-          content.gsub!(feed_tag_regex(APP_CONFIG['feeds_down_tag']), '')
+        if content.match(feed_tag_regex(APP_CONFIG['feed_down_tag']))
+          content.gsub!(feed_tag_regex(APP_CONFIG['feed_down_tag']), '')
           feed_item = item
           break
         end
@@ -125,19 +127,21 @@ class Status
       end
 
       return feed unless feed_item
-
-      published_at = parse_feed_item(:date,    feed_item.send(APP_CONFIG['feeds_item_date']))
-      link         = feed_item.send(APP_CONFIG['feeds_item_link'])
+      
+      published_at = parse_feed_item(:date,    feed_item.send(APP_CONFIG['feed_item_date']))
+      link         = feed_item.send(APP_CONFIG['feed_item_link'])
 
       {:date => published_at, :author => author, :content => content, :link => link}
     rescue Exception => ex
+      p "EXCEPTION"
+      p ex.inspect
       feed
     end
   end
   
   
   def self.feed_whitelist
-    APP_CONFIG['feeds_item_author']
+    APP_CONFIG['feed_authors_whitelist']
   end
   
   private
@@ -145,13 +149,15 @@ class Status
     def self.parse_feed_item(item, value)
       case item.to_s
       when 'date'
-        Time.parse(value.to_s)
+        Time.parse(value.to_s).strftime(APP_CONFIG['feed_item_date_format']) rescue ''
       when 'author'
         # First Last\n   email
         value.gsub(/\n.*/, '')
       when 'content'
-        # remove links
-        value.gsub(/<a.*<\/a>/, '')
+        # Format content if provided
+        APP_CONFIG['feed_item_content_regex'] ? 
+          value.gsub(Regexp.new(APP_CONFIG['feed_item_content_regex']), '') : 
+          value
       end
     end
     
