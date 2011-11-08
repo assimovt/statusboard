@@ -24,7 +24,7 @@ end
 
 
 module StatusHelper
-  def mock_feed
-    File.read(File.join(File.dirname(__FILE__), 'status.feed'))
+  def mock_feed(kind)
+    File.read(File.join(File.dirname(__FILE__), "status_#{kind.to_s}.feed"))
   end
 end

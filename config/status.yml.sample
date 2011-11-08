@@ -1,35 +1,84 @@
+# Common settings for all RACK environments
 common: &common
-  title: Status board
-  service_name: MONITORED APP NAME
   
-  # RSS feed fields used to build up a status message
+  
+  # ==> Appearance
+  # You can customize appearance of the Statusboard here.
+  
+  # Title is used for HTML <title> and the logo tooltip.
+  title: Status board
+  
+  # Service may consist of several nodes.
+  # It is the name of your application shown to users on Statusboard.
+  service_name: <Monitored application name>
+  
+  
+  
+  # ==> Monitoring
+  # You Must define monitoring settings here.
+  
+  # Host name of the production server running Statusboard.
+  host: <Status board production host name>
+  
+  # List of monitored nodes/servers.
+  # Each node must be a URL with http or https protocol
+  # and respond with 200/4xx (up/down) HTTP status.
+  nodes:
+    - <Node 1 URL>
+    - <Node 2 URL>
+    
+  # Email to send notifications when entire service is down.
+  to_email: <To email address>
+  from_email: <From email address>
+  
+  
+  
+  # ==> RSS feed with status message
+  # You can configure any external RSS feeds to update status message on the Statusboard.
+  # Use it to inform about scheduled maintenance breaks, or explain why the service is down.
+
+  # URL of RSS feeds
+  feeds_url: <URL of RSS feeds>
+
+  # RSS feed fields used to build up a status message.
+  # These fields must be part of the feed in the root of an <item> tag.
   feeds_item_date: published
   feeds_item_content: content
   feeds_item_author: author
   feeds_item_link: link
   
-  # Whitelist of authors whose messages are 
-  # considered for status message
+  # RSS feed "hash tags" used to denote how and when the message is shown.
+  # If #up tag found first in the content, message is not going to be visible.
+  # If #down tag found, the first message with such hash tag will be visible.
+  feeds_up_tag: '#up'
+  feeds_down_tag: '#down'
+  
+  # Whitelist of authors whose messages are considered for status message.
   feeds_authors_whitelist:
-    - Quentin
-    
-  # Email to send notification when all nodes are down
-  to_email: PUT AN EMAIL TO NOTIFY
-  from_email: PUT FROM EMAIL
+    - <Feed author name 1>
+    - <Feed author name 2>
+  
+  # When there is a downtime and RSS status message can not be fetched,
+  # this message is going to be shown to the users.
+  default_downtime_message: Unfortunately something went wrong. We have been notified of the issue and working on resolving it.
+  
+  
 
 production:
   <<: *common
-  
-  host: Status board production host name
-  
-  # URL of RSS feeds that used for status message
-  feeds_url: https://blog.example.com/rss.atom
-  
-  # List HTTP or HTTPs nodes monitored
-  # See Development settings for example
-  nodes:
-    - 
-    -
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -47,3 +96,7 @@ development: &non_production_settings
 test:
   <<: *non_production_settings
   <<: *common
+  feeds_authors_whitelist:
+    - Quentin
+  feeds_up_tag: '#up'
+  feeds_down_tag: '#down'

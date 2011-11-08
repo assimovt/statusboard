@@ -59,6 +59,5 @@ end
 
 get '/feed.json' do
   content_type :json
-  @since      = Time.at(params[:since].to_i) rescue nil
-  Status.feed(@since).to_json
+  Status.feed.to_json
 end

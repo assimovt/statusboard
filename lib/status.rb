@@ -92,11 +92,11 @@ class Status
   #
   # Returns hash representation of feed data
   # Returns empty hash on errors
-  # Returns empty hash if no feeds since time given
-  def self.feed(since = nil)
+  def self.feed
     
-    feed   = {}
-    author = nil
+    feed    = {}
+    author  = nil
+    content = nil
     
     begin
       rss       = SimpleRSS.parse open(APP_CONFIG['feeds_url'])
@@ -104,19 +104,30 @@ class Status
       
       rss.items.each do |item|
         next if item.empty?
+        
+        # skip authors that are not in whitelist
         author = parse_feed_item(:author, item.send(feed_whitelist))
         next unless APP_CONFIG['feeds_authors_whitelist'].include?(author)
-        feed_item    = item
-        break
+        
+        content = parse_feed_item(:content, item.send(APP_CONFIG['feeds_item_content']))
+        next if content.empty?
+        
+        # Find up or down tag and:
+        #   return empty feed if up tag found first
+        return feed if content.match(feed_tag_regex(APP_CONFIG['feeds_up_tag']))
+        #   save feed and break if down tag found
+        if content.match(feed_tag_regex(APP_CONFIG['feeds_down_tag']))
+          content.gsub!(feed_tag_regex(APP_CONFIG['feeds_down_tag']), '')
+          feed_item = item
+          break
+        end
+        
       end
 
       return feed unless feed_item
 
       published_at = parse_feed_item(:date,    feed_item.send(APP_CONFIG['feeds_item_date']))
-      content      = parse_feed_item(:content, feed_item.send(APP_CONFIG['feeds_item_content']))
       link         = feed_item.send(APP_CONFIG['feeds_item_link'])
-      
-      return feed if since.is_a?(Time) && published_at.to_i < since.to_i
 
       {:date => published_at, :author => author, :content => content, :link => link}
     rescue Exception => ex
@@ -162,6 +173,12 @@ EOF
       
       mail.delivery_method :sendmail
       mail.deliver
+    end
+    
+    # Constructs regexp to find tag in feed content
+    # tag must have whitespace before and any non-word character after
+    def self.feed_tag_regex(tag = String.new)
+      Regexp.new("\s+#{tag}\W*")
     end
   
 end
