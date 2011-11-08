@@ -139,8 +139,7 @@ body {
   text-align: right;
   padding: 5px;
   border: 2px solid $accent-color;
-  @include single-box-shadow(rgba(0, 0, 0, 0.4), 1px, 1px, 2px);
-  @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 0);
+  @include single-box-shadow(rgba(30, 30, 30, 0.6), 1px, 1px, 2px, 0, inset);
   color: darken($accent-color, 10%);
   
   &.up {
@@ -220,20 +219,22 @@ body {
   &.service-up {
     background: $up-color;
     @include background(linear-gradient(color-stops($up-color, $up-color, darken($up-color, 10%))));
-    border-top: 1px solid lighten($up-color, 5%);
+    border-top: 1px solid $up-color;
+    border-bottom: 1px solid darken($up-color, 20%);
     
     h1 {
-      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+      @include single-text-shadow(rgba(0, 0, 0, 0.5), -1px, -1px, 1px);
     }
   }
   
   &.service-down {
     background: $down-color;
     @include background(linear-gradient(color-stops(darken($down-color, 5%), darken($down-color, 15%))));
-    border-top: 1px solid lighten($down-color, 5%);
+    border-top: 1px solid $down-color;
+    border-bottom: 1px solid darken($down-color, 20%);
     
     h1 {
-      @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 1px);
+      @include single-text-shadow(rgba(0, 0, 0, 0.5), -1px, -1px, 1px);
     }
   }
 }
@@ -241,8 +242,6 @@ body {
 #downtime-message {
   display: none;
   @include adjust-font-size-to(14px, 0.8);
-  border-top: 2px solid darken($down-color, 38%);
-  background: darken($down-color, 35%);
   display: none;
   padding: 10px 15px;
   
@@ -266,14 +265,23 @@ body {
   }
   
   a {
-    color: lighten($link-color, 25%);
+    color: darken($light-gray-color, 5%);
+    text-decoration: underline;
+    
+    &:hover {
+      color: $link-color;
+    }
   }
-}
-
-#service-uptime {
-  .statuses {
-    dl {
-      width: 160px;
+  
+  .meta {
+    margin: 10px 0 0 0;
+    padding-top: 6px;
+    @include adjust-font-size-to(13px);
+    color: darken($light-gray-color, 5%);
+    border-top: 2px solid lighten($base-shade-color, 5%);
+    
+    &span {
+      color: $label-color;
     }
   }
 }
@@ -336,6 +344,20 @@ body {
   }
 }
 
+#service-uptime {
+  .statuses {
+    dl {
+      width: 160px;
+    }
+  }
+  
+  .total-uptime {
+    dd {
+      @include single-text-shadow(rgba(0, 0, 0, 0.8), 1px, 1px, 1px);
+    }
+  }
+}
+
 #last-updated, #uptime-period {
   float: left;
   
@@ -392,34 +414,4 @@ body {
   top: 25px;
   right: 10px;
   z-index: 99999;
-}
-
-#service-log {
-  color: $dark-gray-color;
-  
-  article {
-    border-top: 2px dotted $base-shade-color;
-    border-bottom: 2px solid $wrapper-color;
-    background: $white-color;
-    display: block;
-    padding: 6px 10px;
-    
-    h4 {
-      margin: 10px 0;
-    }
-    
-    p {
-      margin: 10px 0 0 0;
-      @include adjust-font-size-to(14px, 0.8);
-    }
-    
-    time {
-      color: darken($light-gray-color, 10%);
-      @include adjust-font-size-to(13px, 1.4);
-    }
-  }
-  
-  article + article {
-    margin-top: 2px;
-  }
 }

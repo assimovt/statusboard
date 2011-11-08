@@ -9,10 +9,10 @@ StatusBoard.Status = {
   serviceDownText: ' is down',
   failedRequests: 0,
   updateInterval: 6000,
-  showDowntimeMessage: true,
   
   init: function() {
     this.getStatusData();
+    this.toggleStatusMessage();
   },
   
   updateTime: function() {
@@ -30,27 +30,64 @@ StatusBoard.Status = {
     if(nodesDown > 0 && nodesUp === 0) {
       statusText += this.serviceDownText;
       statusClass = 'service-down';
-      
-      // Show downtime message
-      if(this.showDowntimeMessage) {
-        if($(this.downtimeMessageEl+":hidden")) {
-          $(this.downtimeMessageEl).slideDown('fast');
-        }
-      }
     } else {
       statusText += this.serviceUpText;
       statusClass = 'service-up';
-      $(this.downtimeMessageEl+":visible").hide();
     }
     
     $(this.serviceStatusContainer).removeClass().addClass(statusClass).find('h1').html(statusText);
   },
   
+  // Remove unnecessary html from from the feed and build the message
+  cleanupAndShowFeedContent: function(data) {
+    var self = this;
+    
+    if(data.author !== undefined) {
+      output = ' <strong>' + data.author + '</strong>';
+    }
+  
+    if(data.date !== undefined) {
+      output += ' <span>on</span> ' + data.date;
+    }
+    
+    if(data.link !== undefined) {
+      output += '. <a href="'+data.link+'" rel="external">View message</a>';
+    }
+    
+    $(this.downtimeMessageEl).html(data.content + '<p class="meta"><span>Published by:</span> ' + output + '</p>');
+  },
+  
+  // Fetch status message from the RSS feed
+  toggleStatusMessage: function() {
+    var self = this;
+        output = '';
+    
+    var feedRequest = $.ajax({
+      url: "feed.json",
+      type: "GET",
+      dataType: "json"});
+    
+    feedRequest.done(function(data) {
+      if(data.content !== undefined) {
+        self.cleanupAndShowFeedContent(data);
+        
+        if($(self.downtimeMessageEl+":hidden")) {
+          $(self.downtimeMessageEl).slideDown('fast');
+        }
+      } else {
+        $(self.downtimeMessageEl).slideUp('fast');
+      }
+    });
+  },
+  
+  // Fetch nodes' status
   getStatusData: function() {
     var self = this,
         output = "",
         nodesUp = 0,
-        nodesDown = 0;
+        nodesDown = 0,
+        status = 0,
+        feedRequest = '';
         
     var request = $.ajax({
         url: "statuses.json",
@@ -73,6 +110,7 @@ StatusBoard.Status = {
       } else {
         Utils.showData("No data available at the moment", true);
       }
+            
       // Recurse on success
       setTimeout(function() { self.init(); }, self.updateInterval);
     });
