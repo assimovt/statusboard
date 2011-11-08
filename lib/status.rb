@@ -42,7 +42,7 @@ class Status
     
     status_as_whole = all_results.count(true) > 0
     self.create(:updated_at => Time.now, :value => status_as_whole, :uri => "whole")
-    send_panic_email! if status_as_whole
+    send_panic_email! unless status_as_whole
   end
   
   
