@@ -18,15 +18,15 @@ Application currently supports:
 
 ### When the service is up
 
-http://github.com/assimovt/statusboard/raw/master/public/images/status_board_status_up.png
+![status_board_status_up](http://github.com/assimovt/statusboard/raw/master/public/images/status_board_status_up.png)
 
 ### When the service is down
 
-http://github.com/assimovt/statusboard/raw/master/public/images/status_board_status_down.png
+![status_board_status_down](http://github.com/assimovt/statusboard/raw/master/public/images/status_board_status_down.png)
 
 ### Service uptime
 
-http://github.com/assimovt/statusboard/raw/master/public/images/status_board_uptime.png
+![status_board_uptime](http://github.com/assimovt/statusboard/raw/master/public/images/status_board_uptime.png)
 
 ## Quick start
 
