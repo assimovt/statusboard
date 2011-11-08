@@ -133,8 +133,6 @@ class Status
 
       {:date => published_at, :author => author, :content => content, :link => link}
     rescue Exception => ex
-      p "EXCEPTION"
-      p ex.inspect
       feed
     end
   end
