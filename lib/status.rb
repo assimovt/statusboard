@@ -110,7 +110,7 @@ class Status
         author = parse_feed_item(:author, item.send(APP_CONFIG['feed_item_author']))
         next unless feed_whitelist.include?(author)
         
-        content = parse_feed_item(:content, item.send(APP_CONFIG['feed_item_content']))
+        content = item.send(APP_CONFIG['feed_item_content'])
         
         next if content.empty?
         
@@ -119,8 +119,8 @@ class Status
         return feed if content.match(feed_tag_regex(APP_CONFIG['feed_up_tag']))
         #   save feed and break if down tag found
         if content.match(feed_tag_regex(APP_CONFIG['feed_down_tag']))
-          content.gsub!(feed_tag_regex(APP_CONFIG['feed_down_tag']), '')
           feed_item = item
+          content   = parse_feed_item(:content, content)
           break
         end
         
@@ -180,9 +180,9 @@ EOF
     end
     
     # Constructs regexp to find tag in feed content
-    # tag must have whitespace before and any non-word character after
+    # tag must have whitespace before
     def self.feed_tag_regex(tag = String.new)
-      Regexp.new("\s+#{tag}\W*")
+      Regexp.new("\s+#{tag}")
     end
   
 end
