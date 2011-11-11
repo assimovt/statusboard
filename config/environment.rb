@@ -24,3 +24,7 @@ configure do
 end
 
 APP_CONFIG = YAML.load_file("#{File.dirname(__FILE__)}/status.yml")[Sinatra::Base.environment.to_s]
+
+if APP_CONFIG['feed_url'].match(/^https:\/\//) && APP_CONFIG['feed_url_ssl_no_verify']
+  OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE
+end

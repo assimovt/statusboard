@@ -42,6 +42,10 @@ common: &common
 
   # URL of RSS feeds
   feed_url: URL of RSS feeds
+  
+  # Only if feed_url uses HTTPS
+  # Whther to verify SSL peer. Defaults to true.
+  feed_url_ssl_no_verify: true
 
   # RSS feed fields used to build up a status message.
   # These fields must be part of the feed in the root of an <item> tag.
