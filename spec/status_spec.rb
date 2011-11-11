@@ -103,10 +103,6 @@ describe 'status' do
       @feed[:content].should_not match(/\\n/)
     end
     
-    it 'should not have down tag in feed' do
-      @feed[:content].should_not match(/#{APP_CONFIG['feed_down_tag']}/)
-    end
-    
     
   end
   
