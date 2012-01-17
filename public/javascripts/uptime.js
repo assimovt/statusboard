@@ -15,7 +15,7 @@ StatusBoard.Uptime = {
     if($('#from').val().length === 0 && $('#to').val().length === 0) {
       var dateTime = new Date();
       var year = dateTime.getFullYear();
-      var startMonth = dateTime.getMonth();
+      var startMonth = dateTime.getMonth() + 1;
       var endMonth = dateTime.getMonth()+1;
       var day = dateTime.getDate();
       var startDate = day+"."+startMonth+"."+year;
