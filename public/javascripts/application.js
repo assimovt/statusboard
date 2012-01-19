@@ -77,10 +77,8 @@ var Utils = {
     // Show loader when ajaxRequest is made
     $('#loader').ajaxStart(function() {
       spinner = new Spinner(opts).spin(this);
-      $(this).fadeIn(300);
     }).ajaxStop(function() {
       spinner.stop();
-      $(this).fadeOut(300);
     });
   },
   
