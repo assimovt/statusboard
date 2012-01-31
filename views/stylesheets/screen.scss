@@ -60,7 +60,14 @@ a {
 .hidden {
   display: none;
 }
-    
+
+.indicator {
+  border: 2px solid $accent-color;
+  border-right-color: darken($accent-color, 40%);
+  border-bottom-color: darken($accent-color, 40%); 
+  @include single-box-shadow(rgba(255, 255, 255, 0.15), 1px, 0.8em, 1px, 0, inset);
+}
+
 /* Layout */
 
 body {
@@ -134,41 +141,95 @@ body {
   }
 }
 
+#nav {
+  float: right;
+  @include inline-block-list(1px);
+  
+  a {
+    padding: 3px 4px;
+    font-weight: bold;
+    
+    &:hover {
+      background: $link-color;
+      color: $white-color;
+      text-decoration: none;
+    }
+  }
+  
+  .active {    
+    a {
+      color: $base-font-color;
+      background: $light-gray-color;
+    }
+  } 
+}
+
+#last-updated, #uptime-period {
+  float: left;
+  
+  .datetime {
+    color: lighten($label-color, 20%);
+  }
+}
+
+/* Datepicker */
+
+#uptime-period {
+  span {
+    display: inline-block;
+    position: relative;
+    margin: 0 10px 0 5px;
+  }
+
+  .datepicker {
+    border: none;
+    background: lighten($base-shade-color, 10%);
+    color: white;
+    display: inline-block;
+    width: 85px;
+    margin-left: 5px;
+    padding: 4px;
+    margin: 0;
+  }
+
+  .ui-datepicker-trigger {
+    @include opacity(0.6);
+    cursor: pointer;
+    top: 2px;
+    right: 2px;
+    position: absolute;
+    padding: 1px;
+  
+    &:hover {
+      @include opacity(0.8);
+    } 
+  }
+}
+
+/* Statuses */
+
 .status {
+  @extend .indicator;
   background: $accent-color;
   text-align: right;
   padding: 5px;
-  border: 2px solid $accent-color;
-  @include single-box-shadow(rgba(30, 30, 30, 0.6), 1px, 1px, 2px, 0, inset);
   color: darken($accent-color, 10%);
   
   &.up {
     background: $up-color;
     @include background(linear-gradient(color-stops($up-color, darken($up-color, 10%))));
-    //@include single-box-shadow(rgba(75, 153, 0, 0.4), 0, 0, 10px);
     color: $white-color;
   }
     
   &.down {
     background: $down-color;
     @include background(linear-gradient(color-stops($down-color, darken($down-color, 10%))));
-    //@include single-box-shadow(rgba(247, 97, 97, 0.4), 0, 0, 10px);
     color: $white-color;
   }
   
   &.uptime {
     color: $white-color;
   }
-}
-
-.error-msg {
-  margin: 10px 20px 0 20px;
-  display: block;
-}
-
-.loader {
-  padding: 40px;
-  text-align: center;
 }
 
 #service-status, #service-uptime {
@@ -220,8 +281,7 @@ body {
     background: $up-color;
     @include background(linear-gradient(color-stops($up-color, $up-color, darken($up-color, 10%))));
     border-top: 1px solid $up-color;
-    border-bottom: 1px solid darken($up-color, 20%);
-    
+
     h1 {
       @include single-text-shadow(rgba(0, 0, 0, 0.5), -1px, -1px, 1px);
     }
@@ -231,7 +291,6 @@ body {
     background: $down-color;
     @include background(linear-gradient(color-stops(darken($down-color, 5%), darken($down-color, 15%))));
     border-top: 1px solid $down-color;
-    border-bottom: 1px solid darken($down-color, 20%);
     
     h1 {
       @include single-text-shadow(rgba(0, 0, 0, 0.5), -1px, -1px, 1px);
@@ -239,8 +298,10 @@ body {
   }
 }
 
+
 #downtime-message {
   display: none;
+  border-top: 1px solid darken($down-color, 20%);
   @include adjust-font-size-to(14px, 0.8);
   display: none;
   padding: 10px 15px;
@@ -322,14 +383,12 @@ body {
   }
   
   .uptime {
+    @extend .indicator;
     display: block;
     height: 20px;
     padding: 0 4px;
     line-height: 22px;
-    width: 92px;
-    border: 2px solid $accent-color;
-    @include single-box-shadow(rgba(0, 0, 0, 0.4), 1px, 1px, 2px);
-    @include single-text-shadow(rgba(0, 0, 0, 0.4), -1px, -1px, 0);
+    width: 92px;  
     position: absolute;
     margin-top: -22px;
   }
@@ -358,54 +417,14 @@ body {
   }
 }
 
-#last-updated, #uptime-period {
-  float: left;
-  
-  .datetime {
-    color: lighten($label-color, 20%);
-  }
+.error-msg {
+  margin: 10px 20px 0 20px;
+  display: block;
 }
 
-.datepicker {
-  border: none;
-  background: lighten($base-shade-color, 10%);
-  color: $white-color;
-  display: inline-block;
-  width: 85px;
-  font-weight: bold;
-  margin-left: 5px;
-  padding: 4px;
-}
-
-.ui-datepicker-trigger {
-  position: relative;
-  top: 3px;
-  left: -18px;
-  margin-right: 5px;
-  @include opacity(0.8);
-}
-
-#nav {
-  float: right;
-  @include inline-block-list(1px);
-  
-  a {
-    padding: 3px 4px;
-    font-weight: bold;
-    
-    &:hover {
-      background: $accent-color;
-      color: $base-font-color;
-      text-decoration: none;
-    }
-  }
-  
-  .active {    
-    a {
-      color: $base-font-color;
-      background: $light-gray-color;
-    }
-  } 
+.loader {
+  padding: 40px;
+  text-align: center;
 }
 
 #loader {

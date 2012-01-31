@@ -24,7 +24,6 @@ $uptime-color: #3399CC;
 
 /* Import Blueprint modules */
 
-//@import "compass/reset";
 @import "compass/utilities";
 @import "compass/css3";
 @import "compass/typography/vertical_rhythm";
@@ -32,6 +31,5 @@ $uptime-color: #3399CC;
 @import "blueprint/typography";
 @import "blueprint/utilities";
 @import "blueprint/grid";
-@import "blueprint/interaction";
 @import "blueprint/form";
 
