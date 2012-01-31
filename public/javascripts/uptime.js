@@ -15,7 +15,7 @@ StatusBoard.Uptime = {
     if($('#from').val().length === 0 && $('#to').val().length === 0) {
       var dateTime = new Date();
       var year = dateTime.getFullYear();
-      var startMonth = dateTime.getMonth();
+      var startMonth = dateTime.getMonth() + 1;
       var endMonth = dateTime.getMonth()+1;
       var day = dateTime.getDate();
       var startDate = day+"."+startMonth+"."+year;
@@ -87,6 +87,7 @@ StatusBoard.Uptime = {
   showUptime: function() {
     var self = this,
         output = "",
+        statuses = [],
         nodesLoaded = 0,
         total = "",
         wholeNodeUri = "whole", 
@@ -120,12 +121,18 @@ StatusBoard.Uptime = {
           if (nodeUri === wholeNodeUri) {
             total = uptime;
           } else {
-            output += Mustache.to_html(self.uptimeTmpl, {uri: nodeUri, uptime: uptime, width: Math.round(uptime)});
+            statuses.push([nodeUri, uptime]);
           }
           
           // Check that uptimes for all nodes have been loaded
           if(nodesLoaded === nodes.length) {
-            $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + " %");
+            // Sort statuses
+            statuses.sort();
+            $.each(statuses, function(i, n) {
+              output += Mustache.to_html(self.uptimeTmpl, {uri: n[0], uptime: n[1], width: Math.round(n[1])});
+            })
+          
+            $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + "%");
             Utils.showData(output);
             self.enablePeriodUpdate();
           }
