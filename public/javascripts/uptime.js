@@ -13,13 +13,13 @@ StatusBoard.Uptime = {
   enableDatePicker: function() {    
     // Set default dates
     if($('#from').val().length === 0 && $('#to').val().length === 0) {
-      var dateTime = new Date();
-      var year = dateTime.getFullYear();
-      var startMonth = dateTime.getMonth() + 1;
-      var endMonth = dateTime.getMonth()+1;
-      var day = dateTime.getDate();
-      var startDate = day+"."+startMonth+"."+year;
-      var endDate = day+"."+endMonth+"."+year;
+      var dateTime = new Date(),
+          year = dateTime.getFullYear(),
+          startMonth = ("0" + (dateTime.getMonth() + 1)).slice(-2),
+          endMonth = startMonth,
+          day = ("0" + dateTime.getDate()).slice(-2),
+          startDate = day + "." + startMonth + "." + year,
+          endDate = day + "." + endMonth + "." + year;
       
       $('#from').val(startDate);
       $('#to').val(endDate);
@@ -77,7 +77,7 @@ StatusBoard.Uptime = {
   
   enablePeriodUpdate: function() {
     var self = this;
-    $('#update-uptime').fadeIn('fast').one('click', function(){
+    $('#update-uptime').fadeIn('fast').one('click', function() {
       self.showUptime();
       $(this).fadeOut('fast');
       return false;
@@ -130,7 +130,7 @@ StatusBoard.Uptime = {
             statuses.sort();
             $.each(statuses, function(i, n) {
               output += Mustache.to_html(self.uptimeTmpl, {uri: n[0], uptime: n[1], width: Math.round(n[1])});
-            })
+            });
           
             $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + "%");
             Utils.showData(output);
