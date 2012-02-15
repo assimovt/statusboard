@@ -1,4 +1,4 @@
-class Status
+class Status  
   include DataMapper::Resource
 
   property :id,         Serial
@@ -56,7 +56,7 @@ class Status
       n = Node.new(uri)
       s = self.first(:uri => uri, :order => [ :updated_at.desc ], :limit => 1)
       next unless s
-      statuses << { :timestamp => s.updated_at, :status => s.value, :uri => n.uri, :host => n.host }
+      statuses << { :timestamp => format_timestamp(s.updated_at), :status => s.value, :uri => n.uri, :host => n.host }
     end
     statuses
   end
@@ -187,4 +187,7 @@ EOF
       Regexp.new("\s+#{tag}\W*")
     end
   
+    def self.format_timestamp(timestamp, format = "%d.%m.%Y %H:%M:%S")
+      timestamp.strftime(format)
+    end
 end
