@@ -15,15 +15,15 @@ require 'mail'
 
 require 'sinatra' unless defined?(Sinatra)
 
+APP_CONFIG = YAML.load_file("#{File.dirname(__FILE__)}/status.yml")[Sinatra::Base.environment.to_s]
+
 configure do
   # load models
   $LOAD_PATH.unshift("#{File.dirname(__FILE__)}/../lib")
   Dir.glob("#{File.dirname(__FILE__)}/../lib/*.rb") { |lib| require File.basename(lib, '.*') }
 
-  DataMapper.setup(:default, (ENV["DATABASE_URL"] || "sqlite3:///#{File.expand_path(File.dirname(__FILE__))}/../db/#{Sinatra::Base.environment}.db"))
+  DataMapper.setup(:default, (APP_CONFIG['db_url'] || "sqlite3:///#{File.expand_path(File.dirname(__FILE__))}/../db/#{Sinatra::Base.environment}.db"))
 end
-
-APP_CONFIG = YAML.load_file("#{File.dirname(__FILE__)}/status.yml")[Sinatra::Base.environment.to_s]
 
 if APP_CONFIG['feed_url'].match(/^https:\/\//) && APP_CONFIG['feed_url_ssl_no_verify']
   OpenSSL::SSL::VERIFY_PEER = OpenSSL::SSL::VERIFY_NONE

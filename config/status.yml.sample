@@ -17,6 +17,10 @@ common: &common
   # ==> Monitoring
   # You Must define monitoring settings here.
   
+  # You can define other than SQLite DataMapper URL here
+  # see: http://datamapper.rubyforge.org/dm-core/DataMapper.html
+  db_url: false
+  
   # Host name of the production server running Statusboard.
   host: Status board production host name
   
