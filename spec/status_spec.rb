@@ -1,4 +1,5 @@
 require "#{File.dirname(__FILE__)}/spec_helper"
+require 'time'
 
 describe 'status' do
   
@@ -60,7 +61,7 @@ describe 'status' do
     statuses.first[:uri].should eql(@node.uri)
     statuses.first[:status].should be_true
     statuses.first[:host].should eql('example.com')
-    (statuses.first[:timestamp].strftime("%s").to_i + 600 > Time.now.to_i).should be_true
+    (Time.parse(statuses.first[:timestamp]).to_i + 600 > Time.now.to_i).should be_true
   end
   
   it 'should calculate uptime' do
