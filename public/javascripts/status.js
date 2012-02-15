@@ -15,8 +15,8 @@ StatusBoard.Status = {
     this.toggleStatusMessage();
   },
   
-  updateTime: function() {
-    $(this.lastUpdateEl).find('.datetime').html(Utils.getDateTime('', 0));
+  updateTime: function(time) {
+    $(this.lastUpdateEl).find('.datetime').html(time);
   },
   
   getStatusClass: function(status) {
@@ -87,7 +87,8 @@ StatusBoard.Status = {
         nodesUp = 0,
         nodesDown = 0,
         status = 0,
-        feedRequest = '';
+        feedRequest = '',
+        updatedAt = '';
         
     var request = $.ajax({
         url: "statuses.json",
@@ -103,10 +104,12 @@ StatusBoard.Status = {
             nodesDown++;
           }
           output += Mustache.to_html(self.nodeStatusTmpl, {uri: node.uri, status: self.getStatusClass(node.status)});
+          updatedAt = node.timestamp;          
         });
   
         self.setGlobalStatus(nodesUp, nodesDown);
         Utils.showData(output);
+        self.updateTime(updatedAt);
       } else {
         Utils.showData("No data available at the moment", true);
       }
@@ -119,8 +122,6 @@ StatusBoard.Status = {
       self.errorHandler();
       Utils.showData(); 
     });
-    
-    self.updateTime();
   },
  
    // Handle errors
