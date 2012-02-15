@@ -33,6 +33,9 @@ GEM
       dm-core (~> 1.1.0)
     dm-migrations (1.1.0)
       dm-core (~> 1.1.0)
+    dm-mysql-adapter (1.1.0)
+      dm-do-adapter (~> 1.1.0)
+      do_mysql (~> 0.10.2)
     dm-serializer (1.1.0)
       dm-core (~> 1.1.0)
       fastercsv (~> 1.5.4)
@@ -53,6 +56,8 @@ GEM
       uuidtools (~> 2.1.2)
     dm-validations (1.1.0)
       dm-core (~> 1.1.0)
+    do_mysql (0.10.6)
+      data_objects (= 0.10.6)
     do_sqlite3 (0.10.6)
       data_objects (= 0.10.6)
     fastercsv (1.5.4)
@@ -107,6 +112,8 @@ DEPENDENCIES
   dm-aggregates
   dm-core
   dm-migrations
+  dm-mysql-adapter
+  dm-serializer
   dm-sqlite-adapter
   dm-timestamps
   dm-validations
