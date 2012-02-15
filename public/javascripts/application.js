@@ -24,9 +24,7 @@ var Utils = {
     
     // Prepend the zero when needed
     $.each(dt, function(i, d) {
-      if(d < 10) {
-        dt[i] = '0' + d;
-      }
+      dt[i] = ("0" + d).slice(-2);
     });
 
     switch(format) {
