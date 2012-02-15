@@ -70,13 +70,9 @@ class Status
   #
   # Returns String uptime of the node or nil if statuses not found
   def self.uptime(start_time, end_time, node)
-    uptimes   = 0
-    downtimes = 0
     
-    self.all(:uri => node.uri, :updated_at.gte => start_time, :updated_at.lte => end_time).each do |status|
-      uptimes   += 1 if  status.value
-      downtimes += 1 if !status.value
-    end
+    uptimes   = self.count(:uri => node.uri, :updated_at.gte => start_time, :updated_at.lte => end_time, :value => true)
+    downtimes = self.count(:uri => node.uri, :updated_at.gte => start_time, :updated_at.lte => end_time, :value => false)
     
     return nil if uptimes == 0 && downtimes == 0
     
