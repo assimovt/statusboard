@@ -89,6 +89,11 @@ var Utils = {
   
   setNavActiveClass: function(el) {
     $(el).parent().addClass('active');
+  },
+  
+  parseServerUrl: function(url) {
+    var link = url.split('/');
+    return link['0'] + "//" + link[2];
   }
 };
 

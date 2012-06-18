@@ -4,7 +4,7 @@ StatusBoard.Status = {
   serviceStatusContainer: '#service-status',
   lastUpdateEl: '#last-updated',
   downtimeMessageEl: '#downtime-message',
-  nodeStatusTmpl: '<div class="node"><span class="name">{{uri}}</span><span class="node-status"><span class="status {{status}}"></span></span></div>',
+  nodeStatusTmpl: '<div class="node"><span class="name"><a href="{{uri}}">{{uri}}</a></span><span class="node-status"><span class="status {{status}}"></span></span></div>',
   serviceUpText: ' is up',
   serviceDownText: ' is down',
   failedRequests: 0,
@@ -103,7 +103,7 @@ StatusBoard.Status = {
           } else {
             nodesDown++;
           }
-          output += Mustache.to_html(self.nodeStatusTmpl, {uri: node.uri, status: self.getStatusClass(node.status)});
+          output += Mustache.to_html(self.nodeStatusTmpl, {uri: Utils.parseServerUrl(node.uri), status: self.getStatusClass(node.status)});
           updatedAt = node.timestamp;          
         });
   

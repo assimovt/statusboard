@@ -359,6 +359,12 @@ body {
     line-height: 1.6em;
   }
   
+  .name {
+    a {
+      color: $white-color;
+    }
+  }
+  
   .node-status {
     float: right;
     text-align: right;
