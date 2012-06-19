@@ -2,7 +2,7 @@ var StatusBoard = StatusBoard || {};
 
 StatusBoard.Uptime = {
   serviceUptimeContainer: '#service-uptime',
-  uptimeTmpl: '<div class="node"><span class="name">{{uri}}</span><span class="node-status wide"><span class="progress" style="width: {{width}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
+  uptimeTmpl: '<div class="node"><span class="name"><a href="{{uri}}">{{uri}}</a></span><span class="node-status wide"><span class="progress" style="width: {{width}}px;"></span><span class="uptime">{{uptime}}%</span></span></div>',
 
   init: function() {
     this.enableDatePicker();
@@ -129,7 +129,7 @@ StatusBoard.Uptime = {
             // Sort statuses
             statuses.sort();
             $.each(statuses, function(i, n) {
-              output += Mustache.to_html(self.uptimeTmpl, {uri: n[0], uptime: n[1], width: Math.round(n[1])});
+              output += Mustache.to_html(self.uptimeTmpl, {uri: Utils.parseServerUrl(n[0]), uptime: n[1], width: Math.round(n[1])});
             });
           
             $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + "%");
