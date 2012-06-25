@@ -340,8 +340,8 @@ body {
     @include adjust-font-size-to(13px);
     color: darken($light-gray-color, 5%);
     border-top: 2px solid lighten($base-shade-color, 5%);
-    
-    &span {
+
+    span {
       color: $label-color;
     }
   }
