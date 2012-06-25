@@ -103,7 +103,7 @@ StatusBoard.Status = {
           } else {
             nodesDown++;
           }
-          output += Mustache.to_html(self.nodeStatusTmpl, {uri: Utils.parseServerUrl(node.uri), status: self.getStatusClass(node.status)});
+          output += Mustache.to_html(self.nodeStatusTmpl, {uri: node.uri, status: self.getStatusClass(node.status)});
           updatedAt = node.timestamp;          
         });
   

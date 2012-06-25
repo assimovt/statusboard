@@ -129,7 +129,7 @@ StatusBoard.Uptime = {
             // Sort statuses
             statuses.sort();
             $.each(statuses, function(i, n) {
-              output += Mustache.to_html(self.uptimeTmpl, {uri: Utils.parseServerUrl(n[0]), uptime: n[1], width: Math.round(n[1])});
+              output += Mustache.to_html(self.uptimeTmpl, {uri: n[0], uptime: n[1], width: Math.round(n[1])});
             });
           
             $(self.serviceUptimeContainer).find('.total-uptime > dd').addClass('uptime').html(total + "%");
