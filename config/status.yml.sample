@@ -1,52 +1,52 @@
 # Common settings for all RACK environments
 common: &common
-  
-  
+
+
   # ==> Appearance
   # You can customize appearance of the Statusboard here.
-  
+
   # Title is used for HTML <title> and the logo tooltip.
   title: Status board
-  
+
   # Service may consist of several nodes.
   # It is the name of your application shown to users on Statusboard.
   service_name: Monitored application name
-  
-  
-  
+
+
+
   # ==> Monitoring
   # You Must define monitoring settings here.
-  
+
   # You can define other than SQLite DataMapper URL here
   # see: http://datamapper.rubyforge.org/dm-core/DataMapper.html
   db_url: false
-  
+
   # Host name of the production server running Statusboard.
   host: Status board production host name
-  
+
   # List of monitored nodes/servers.
   # Each node must be a URL with http or https protocol
   # and respond with 200/4xx (up/down) HTTP status.
   nodes:
     - Node 1 URL
     - Node 2 URL
-    
+
   # Default timeout in seconds to get node status
   node_timeout: 600
-    
+
   # Email to send notifications when entire service is down.
   to_email: To email address
   from_email: From email address
-  
-  
-  
+
+
+
   # ==> RSS feed with status message
   # You can configure any external RSS feeds to update status message on the Statusboard.
   # Use it to inform about scheduled maintenance breaks, or explain why the service is down.
 
   # URL of RSS feeds
   feed_url: URL of RSS feeds
-  
+
   # Only if feed_url uses HTTPS
   # Whther to verify SSL peer. Defaults to true.
   feed_url_ssl_no_verify: true
@@ -57,30 +57,30 @@ common: &common
   feed_item_content: content
   feed_item_author: author
   feed_item_link: link
-  
+
   # Optional Regular expression to clean up content: html tags, etc.
   # Example below, strips all html tags and new line characters.
   feed_item_content_regex: '(<\/?[^>]*>|\\n)'
-  
+
   # Date format of published date
   feed_item_date_format: '%d.%m.%Y %H:%M:%S'
-  
+
   # RSS feed "hash tags" used to denote how and when the message is shown.
   # If #up tag found first in the content, message is not going to be visible.
   # If #down tag found, the first message with such hash tag will be visible.
   feed_up_tag: '#up'
   feed_down_tag: '#down'
-  
+
   # Whitelist of authors whose messages are considered for status message.
   feed_authors_whitelist:
     - Feed author name 1
     - Feed author name 2
-  
+
   # When there is a downtime and RSS status message can not be fetched,
   # this message is going to be shown to the users.
   default_downtime_message: Unfortunately something went wrong. We have been notified of the issue and working on resolving it.
-  
-  
+
+
 
 production:
   <<: *common
@@ -118,4 +118,3 @@ development: &non_production_settings
 
 test:
   <<: *non_production_settings
-  <<: *common
