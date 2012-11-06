@@ -1,4 +1,4 @@
-Statusboard [![Build Status](https://secure.travis-ci.org/assimovt/statusboard.png)](http://travis-ci.org/assimovt/statusboard)
+Statusboard [![Build Status](https://secure.travis-ci.org/Eficode/statusboard.png)](http://travis-ci.org/Eficode/statusboard)
 ===========
 
 Statusboard is a simple Sinatra/SQLite powered application to track availability of remote nodes.
@@ -18,21 +18,21 @@ Application currently supports:
 
 ### When the service is up
 
-![status_board_status_up](http://github.com/assimovt/statusboard/raw/master/public/images/status_board_status_up.png)
+![status_board_status_up](http://github.com/Eficode/statusboard/raw/master/public/images/status_board_status_up.png)
 
 ### When the service is down
 
-![status_board_status_down](http://github.com/assimovt/statusboard/raw/master/public/images/status_board_status_down.png)
+![status_board_status_down](http://github.com/Eficode/statusboard/raw/master/public/images/status_board_status_down.png)
 
 ### Service uptime
 
-![status_board_uptime](http://github.com/assimovt/statusboard/raw/master/public/images/status_board_uptime.png)
+![status_board_uptime](http://github.com/Eficode/statusboard/raw/master/public/images/status_board_uptime.png)
 
 ## Quick start
 
 * Clone the repository:
 
-`git clone git://github.com/assimovt/statusboard.git`
+`git clone git://github.com/Eficode/statusboard.git`
 
 * Copy and configure `status.yml` following comments in the file:
 
