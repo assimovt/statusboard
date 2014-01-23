@@ -3,7 +3,7 @@ class Status
 
   property :id,         Serial
   property :value,      Boolean,  :required => true
-  property :updated_at, DateTime, :required => true
+  property :updated_at, DateTime, :required => true, :index => true
   property :uri,        String,   :required => true
 
   validates_presence_of :value, :message => 'Value must not be blank'
