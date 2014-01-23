@@ -23,6 +23,7 @@ configure do
   Dir.glob("#{File.dirname(__FILE__)}/../lib/*.rb") { |lib| require File.basename(lib, '.*') }
 
   DataMapper.setup(:default, (APP_CONFIG['db_url'] || "sqlite3:///#{File.expand_path(File.dirname(__FILE__))}/../db/#{Sinatra::Base.environment}.db"))
+  DataMapper.finalize
 end
 
 if APP_CONFIG['feed_url'].match(/^https:\/\//) && APP_CONFIG['feed_url_ssl_no_verify']
