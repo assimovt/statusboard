@@ -26,7 +26,7 @@ Application currently supports:
 
 ### Service uptime
 
-![status_board_uptime](http://github.com/Eficode/statusboard/raw/master/public/images/status_board_uptime.png)
+![status_board_uptime](https://raw.githubusercontent.com/assimovt/statusboard/master/public/images/status_board_uptime.png)
 
 ## Quick start
 
