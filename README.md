@@ -18,11 +18,11 @@ Application currently supports:
 
 ### When the service is up
 
-![status_board_status_up](http://github.com/Eficode/statusboard/raw/master/public/images/status_board_status_up.png)
+![status_board_status_up](https://raw.githubusercontent.com/assimovt/statusboard/master/public/images/status_board_status_up.png)
 
 ### When the service is down
 
-![status_board_status_down](http://github.com/Eficode/statusboard/raw/master/public/images/status_board_status_down.png)
+![status_board_status_down](https://raw.githubusercontent.com/assimovt/statusboard/master/public/images/status_board_status_down.png)
 
 ### Service uptime
 
